@@ -1,0 +1,49 @@
+on: [push]
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Gleam
+        id: setup-gleam
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: false
+          gleam-version: '1.2.1'
+
+      - name: Set up pnpm
+        id: setup-pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        id: install-dependencies
+        run: pnpm install
+
+      - name: Build
+        id: build
+        run: pnpm build
+
+      - name: Deploy with Wrangler
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build --project-name g-kod
+        if: github.ref == 'refs/heads/main'
