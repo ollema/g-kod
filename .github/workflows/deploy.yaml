@@ -45,5 +45,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build --project-name g-kod
+          command: pages deploy dist --project-name g-kod
         if: github.ref == 'refs/heads/main'

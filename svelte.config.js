@@ -6,7 +6,11 @@ import adapter from '@sveltejs/adapter-static';
 const config = {
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()]),
 	kit: {
-		adapter: adapter()
+		adapter: adapter({
+			pages: 'dist',
+			precompress: true,
+			strict: true
+		})
 	}
 };
 export default config;
