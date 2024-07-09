@@ -1,0 +1,9 @@
+name = "g_kod"
+version = "0.0.1"
+target = "javascript"
+
+[javascript]
+typescript_declarations = true
+
+[dependencies]
+gleam_stdlib = "~> 0.30"
