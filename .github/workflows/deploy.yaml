@@ -35,6 +35,19 @@ jobs:
         id: install-dependencies
         run: pnpm install
 
+      - name: Lint
+        id: lint
+        run: pnpm lint
+
+      - name: Check
+        id: check
+        run: pnpm check
+        continue-on-error: true # TODO: reenable this when possible
+
+      - name: Test
+        id: test
+        run: pnpm test && gleam test
+
       - name: Build
         id: build
         run: pnpm build

@@ -5,4 +5,3 @@
 </script>
 
 <p>{greeting}</p>
- 
