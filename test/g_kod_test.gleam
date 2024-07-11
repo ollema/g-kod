@@ -35,7 +35,7 @@ G54 (select first work coordinate system)
 G90 (absolute positioning)
 G94 (enable feed per minute mode)
 
-(tool parameters - tool diameter: 5.0 mm, number of teeth: 2)
+(tool - diameter: 5.0 mm, number of teeth: 2)
 S10000 M03 (set spindle speed to 10000 and start spindle clockwise)
 
 G00 X0.0 Y0.0 Z5.0 (rapid move to safe position)

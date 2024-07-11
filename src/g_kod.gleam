@@ -95,7 +95,7 @@ pub fn set_defaults() -> String {
 
 pub fn set_tool(code: String, tool: Tool) -> String {
   code
-  <> "(tool parameters - tool diameter: "
+  <> "(tool - diameter: "
   <> float.to_string(tool.diameter)
   <> " mm"
   <> case tool.n_teeth {
