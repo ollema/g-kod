@@ -6,11 +6,10 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test": "vitest",
+		"check": "echo 'running svelte-check\n' && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && echo '\nrunning gleam check\n' && gleam check",
+		"test": "echo 'running vitest\n' && vitest run && echo '\nrunning gleam test\n' && gleam test",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "echo 'running prettier\n' && prettier --write . && echo '\nrunning gleam format\n' && gleam format"
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.3.2",
