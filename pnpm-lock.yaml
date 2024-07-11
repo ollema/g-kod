@@ -62,9 +62,6 @@ importers:
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.4
-      ts-gleam:
-        specifier: ^1.0.1
-        version: 1.0.1
       tslib:
         specifier: ^2.6.3
         version: 2.6.3
@@ -406,9 +403,6 @@ packages:
   '@humanwhocodes/retry@0.3.0':
     resolution: {integrity: sha512-d2CGZR2o7fS6sWB7DG/3a95bGKQyHMACZ5aW8qGkkqQpUoZV6C0X7Pc7l4ZNMZkfNBf4VWNe9E1jRsf0G146Ew==}
     engines: {node: '>=18.18'}
-
-  '@iarna/toml@2.2.5':
-    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
   '@internationalized/date@3.5.4':
     resolution: {integrity: sha512-qoVJVro+O0rBaw+8HPjUB1iH8Ihf8oziEnqMnvhJUSuVIrHOuZ6eNLHNvzXJKUvAtaDiqMnRlg8Z2mgh09BlUw==}
@@ -1779,9 +1773,6 @@ packages:
     peerDependencies:
       typescript: '>=4.2.0'
 
-  ts-gleam@1.0.1:
-    resolution: {integrity: sha512-2o+oRSPYGL4iVqXnrc97dUWwJWAWmvlJaitPlJsfYFPlVqT710OyrqR+byrjStcJfu8R8KbSaX81twLOECR70A==}
-
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
@@ -2144,8 +2135,6 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.3.0': {}
-
-  '@iarna/toml@2.2.5': {}
 
   '@internationalized/date@3.5.4':
     dependencies:
@@ -3492,11 +3481,6 @@ snapshots:
 
   ts-api-utils@1.3.0(typescript@5.5.3):
     dependencies:
-      typescript: 5.5.3
-
-  ts-gleam@1.0.1:
-    dependencies:
-      '@iarna/toml': 2.2.5
       typescript: 5.5.3
 
   ts-interface-checker@0.1.13: {}
