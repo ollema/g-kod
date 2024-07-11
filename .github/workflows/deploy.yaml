@@ -9,49 +9,40 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - name: Set up Gleam
         id: setup-gleam
         uses: erlef/setup-beam@v1
         with:
           otp-version: false
           gleam-version: '1.3.0'
-
       - name: Set up pnpm
         id: setup-pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-
       - name: Set up Node.js
         id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-
       - name: Install dependencies
         id: install-dependencies
         run: pnpm install
-
       - name: Lint
         id: lint
         run: pnpm lint
-
       - name: Check
         id: check
         run: pnpm check
         continue-on-error: true # TODO: reenable this when possible
-
       - name: Test
         id: test
         run: pnpm test && gleam test
-
       - name: Build
         id: build
         run: pnpm build
-
       - name: Deploy with Wrangler
         id: deploy
         uses: cloudflare/wrangler-action@v3
