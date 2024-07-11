@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { greet } from '../g_kod.gleam';
+	import { FaceMillingOptions, FaceMilling, Tool, generate_code, X } from '../g_kod.gleam';
 
-	const greeting = greet();
+	const options = new FaceMillingOptions(10.0, 10.0, 0.0, -5.0, 5.0, 5.0, -2.0, 0.5, new X());
+	const face_milling = new FaceMilling(options);
+	const tool = new Tool(5.0, 10000, 2000);
 
-	function generate_code(operation: string) {
-		console.log('hello');
-	}
-
-	generate_code('hello');
+	const code = generate_code(face_milling, tool);
 </script>
 
-<p>{greeting}</p>
+<pre>{code}</pre>

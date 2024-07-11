@@ -1,6 +1,5 @@
 import gleam/float
 import gleam/int
-import gleam/option.{type Option}
 
 // constants
 const select_xy_plane = "G17 (select xy plane)\n"
@@ -32,7 +31,7 @@ pub type FaceMillingOptions {
     retract_height: Float,
     clearance_height: Float,
     depth_of_cut: Float,
-    step_over: Option(Float),
+    step_over: Float,
     direction: Direction,
   )
 }
@@ -44,7 +43,7 @@ pub type Direction {
 
 // tools
 pub type Tool {
-  Tool(diameter: Float, n_teeth: Option(Int), speed: Int, feed: Int)
+  Tool(diameter: Float, speed: Int, feed: Int)
 }
 
 // entrypoint

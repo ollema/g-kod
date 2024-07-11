@@ -1,5 +1,4 @@
 import g_kod
-import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
 
@@ -17,12 +16,11 @@ pub fn face_milling_test() {
       retract_height: 5.0,
       clearance_height: 5.0,
       depth_of_cut: -2.0,
-      step_over: Some(0.5),
+      step_over: 0.5,
       direction: g_kod.X,
     )
 
-  let tool =
-    g_kod.Tool(diameter: 5.0, n_teeth: Some(2), speed: 10_000, feed: 2000)
+  let tool = g_kod.Tool(diameter: 5.0, speed: 10_000, feed: 2000)
 
   g_kod.generate_code(g_kod.FaceMilling(options), tool)
   |> should.equal(
