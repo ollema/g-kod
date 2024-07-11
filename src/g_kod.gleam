@@ -1,5 +1,6 @@
 import gleam/float
 import gleam/int
+import gleam/option.{type Option, None, Some}
 
 // constants
 const select_xy_plane = "G17 (select xy plane)\n"
@@ -43,7 +44,7 @@ pub type Direction {
 
 // tools
 pub type Tool {
-  Tool(diameter: Float, speed: Int, feed: Int)
+  Tool(diameter: Float, speed: Int, feed: Int, n_teeth: Option(Int))
 }
 
 // entrypoint
@@ -94,6 +95,13 @@ pub fn set_defaults() -> String {
 
 pub fn set_tool(code: String, tool: Tool) -> String {
   code
+  <> "(tool parameters - tool diameter: "
+  <> float.to_string(tool.diameter)
+  <> " mm"
+  <> case tool.n_teeth {
+    Some(n_teeth) -> ", number of teeth: " <> int.to_string(n_teeth) <> ")\n"
+    None -> ")\n"
+  }
   <> "S"
   <> int.to_string(tool.speed)
   <> " M03 (set spindle speed to "

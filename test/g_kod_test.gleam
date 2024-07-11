@@ -1,4 +1,5 @@
 import g_kod
+import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
 
@@ -20,7 +21,8 @@ pub fn face_milling_test() {
       direction: g_kod.X,
     )
 
-  let tool = g_kod.Tool(diameter: 5.0, speed: 10_000, feed: 2000)
+  let tool =
+    g_kod.Tool(diameter: 5.0, speed: 10_000, feed: 2000, n_teeth: Some(2))
 
   g_kod.generate_code(g_kod.FaceMilling(options), tool)
   |> should.equal(
@@ -33,6 +35,7 @@ G54 (select first work coordinate system)
 G90 (absolute positioning)
 G94 (enable feed per minute mode)
 
+(tool parameters - tool diameter: 5.0 mm, number of teeth: 2)
 S10000 M03 (set spindle speed to 10000 and start spindle clockwise)
 
 G00 X0.0 Y0.0 Z5.0 (rapid move to safe position)

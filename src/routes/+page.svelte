@@ -3,6 +3,7 @@
 
 	const options = new FaceMillingOptions(10.0, 10.0, 0.0, -5.0, 5.0, 5.0, -2.0, 0.5, new X());
 	const face_milling = new FaceMilling(options);
+	// @ts-expect-error - see https://github.com/Enderchief/gleam-tools/issues/11
 	const tool = new Tool(5.0, 10000, 2000);
 
 	const code = generate_code(face_milling, tool);
