@@ -8,3 +8,4 @@ typescript_declarations = true
 
 [dependencies]
 gleam_stdlib = "~> 0.30"
+sprinkle = ">= 1.0.1 and < 2.0.0"

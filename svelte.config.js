@@ -10,7 +10,10 @@ const config = {
 			pages: 'dist',
 			precompress: true,
 			strict: true
-		})
+		}),
+		alias: {
+			gleam_compiled: 'build/dev/javascript'
+		}
 	}
 };
 export default config;

@@ -1,21 +1,6 @@
 import gleam/float
 import gleam/int
-import gleam/option.{type Option, None, Some}
-
-// constants
-const select_xy_plane = "G17 (select xy plane)\n"
-
-const select_millimeters = "G21 (select millimeters)\n"
-
-const cancel_cutter_radius_compensation = "G40 (cancel cutter radius compensation)\n"
-
-const cancel_tool_length_offset = "G49 (cancel tool length offset)\n"
-
-const select_first_work_coordinate_system = "G54 (select first work coordinate system)\n"
-
-const absolute_positioning = "G90 (absolute positioning)\n"
-
-const enable_feed_per_minute_mode = "G94 (enable feed per minute mode)\n"
+import sprinkle.{format}
 
 // operations
 pub type Operation {
@@ -44,7 +29,7 @@ pub type Direction {
 
 // tools
 pub type Tool {
-  Tool(diameter: Float, speed: Int, feed: Int, n_teeth: Option(Int))
+  Tool(diameter: Float, speed: Int, feed: Int)
 }
 
 // entrypoint
@@ -82,32 +67,27 @@ pub fn generate_face_milling_code(
 
 // shared boilerplate
 pub fn set_defaults() -> String {
-  "\n"
-  <> select_xy_plane
-  <> select_millimeters
-  <> cancel_cutter_radius_compensation
-  <> cancel_tool_length_offset
-  <> select_first_work_coordinate_system
-  <> absolute_positioning
-  <> enable_feed_per_minute_mode
-  <> "\n"
+  "
+G17 (select xy plane)
+G21 (select millimeters)
+G40 (cancel cutter radius compensation)
+G49 (cancel tool length offset)
+G54 (select first work coordinate system)
+G90 (absolute positioning)
+G94 (enable feed per minute mode)
+
+"
 }
 
 pub fn set_tool(code: String, tool: Tool) -> String {
   code
-  <> "(tool - diameter: "
-  <> float.to_string(tool.diameter)
-  <> " mm"
-  <> case tool.n_teeth {
-    Some(n_teeth) -> ", number of teeth: " <> int.to_string(n_teeth) <> ")\n"
-    None -> ")\n"
-  }
-  <> "S"
-  <> int.to_string(tool.speed)
-  <> " M03 (set spindle speed to "
-  <> int.to_string(tool.speed)
-  <> " and start spindle clockwise)\n"
-  <> "\n"
+  <> format("(tool - diameter: {diameter} mm", [
+    #("diameter", float.to_string(tool.diameter)),
+  ])
+  <> format(
+    "S{speed} M03 (set spindle speed to {speed} and start spindle clockwise)\n",
+    [#("speed", int.to_string(tool.speed))],
+  )
 }
 
 pub fn go_to_home(code: String, home_position: Position) -> String {
