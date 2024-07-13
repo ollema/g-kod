@@ -59,7 +59,13 @@ pub fn generate_face_milling_code(
   options: FaceMillingOptions,
   tool: Tool,
 ) -> GCode {
-  let home_position = Position(x: 0.0, y: 0.0, z: options.z_safe_height)
+  let home_position = case options.corner {
+    BottomLeft -> Position(x: 0.0, y: 0.0, z: options.z_safe_height)
+    BottomRight -> Position(x: options.x_max, y: 0.0, z: options.z_safe_height)
+    TopRight ->
+      Position(x: options.x_max, y: options.y_max, z: options.z_safe_height)
+    TopLeft -> Position(x: 0.0, y: options.y_max, z: options.z_safe_height)
+  }
 
   let code = set_defaults()
   let code = set_tool(code, tool)
@@ -69,7 +75,7 @@ pub fn generate_face_milling_code(
       code,
       position,
       Position(..position, z: 0.0),
-      Some("move to origin"),
+      Some("move to start point"),
     )
   let code = list.append(code, [""])
   let #(code, _) = do_face_milling(code, position, options, tool)
@@ -203,7 +209,6 @@ pub fn next_forward_position(
           options.x_max,
         ),
       )
-
     Left ->
       Position(
         ..position,
@@ -220,7 +225,7 @@ pub fn next_forward_position(
     Down ->
       Position(
         ..position,
-        y: float.max(position.x -. options.step_over *. tool.diameter, 0.0),
+        y: float.max(position.y -. options.step_over *. tool.diameter, 0.0),
       )
   }
 }

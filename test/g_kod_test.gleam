@@ -37,7 +37,7 @@ S10000 M03 (set spindle speed to 10000 and start spindle clockwise)
 
 G00 X0.0 Y0.0 Z5.0 (rapid move to safe position)
 
-G01 Z0.0 (move to origin)
+G01 Z0.0 (move to start point)
 
 G01 Z-2.0 (start face milling pass at -2.0 mm)
 G01 Y10.0

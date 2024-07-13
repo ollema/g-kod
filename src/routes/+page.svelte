@@ -1,12 +1,22 @@
 <script lang="ts">
+	import { onMount, tick } from 'svelte';
 	import {
 		FaceMillingOptions,
 		FaceMilling,
 		Tool,
 		BottomLeft,
+		BottomRight,
+		TopRight,
+		TopLeft,
 		Right,
+		Left,
+		Up,
+		Down,
 		generate_code
 	} from '../g_kod.gleam';
+
+	import DirectionLine from './DirectionLine.svelte';
+	import DirectionMap from './DirectionMap.svelte';
 
 	let x_max: number = 10.0;
 	let y_max: number = 10.0;
@@ -15,16 +25,52 @@
 	let z_safe_height: number = 5.0;
 	let z_depth_of_cut: number = -2.0;
 	let step_over: number = 0.5;
-	let corner: 'bottom_left' | 'bottom_right' | 'top_left' | 'top_right';
-	let milling_direction: 'right' | 'left' | 'up' | 'down';
+	let corner: 'bottom_left' | 'bottom_right' | 'top_left' | 'top_right' = 'bottom_left';
+	let milling_direction: 'right' | 'left' | 'up' | 'down' = 'right';
 
 	let diameter: number = 5.0;
 	let speed: number = 10000;
 	let feed: number = 2000;
 
-	let code = generate_face_milling_code();
+	let code = '';
 
 	function generate_face_milling_code() {
+		let crnr: BottomLeft | BottomRight | TopLeft | TopRight;
+		switch (corner) {
+			case 'bottom_left':
+				crnr = new BottomLeft();
+				break;
+			case 'bottom_right':
+				crnr = new BottomRight();
+				break;
+			case 'top_left':
+				crnr = new TopLeft();
+				break;
+			case 'top_right':
+				crnr = new TopRight();
+				break;
+			default:
+				crnr = new BottomLeft();
+		}
+
+		let dir: Left | Right | Up | Down;
+		switch (milling_direction) {
+			case 'right':
+				dir = new Right();
+				break;
+			case 'left':
+				dir = new Left();
+				break;
+			case 'up':
+				dir = new Up();
+				break;
+			case 'down':
+				dir = new Down();
+				break;
+			default:
+				dir = new Right();
+		}
+
 		return generate_code(
 			new FaceMilling(
 				new FaceMillingOptions(
@@ -35,22 +81,33 @@
 					z_safe_height,
 					z_depth_of_cut,
 					step_over,
-					new BottomLeft(),
-					new Right()
+					crnr,
+					dir
 				)
 			),
 			new Tool(diameter, speed, feed)
 		);
 	}
 
-	function handleSubmit() {
+	let form: HTMLFormElement;
+	let show = false;
+
+	async function handleSubmit() {
+		show = false;
+		await tick();
 		code = generate_face_milling_code();
+		show = true;
 	}
+
+	onMount(() => {
+		form.requestSubmit();
+	});
 </script>
 
 <form
 	on:submit|preventDefault={handleSubmit}
 	class="m-4 space-y-4 rounded-md bg-neutral-800 p-4 pt-2"
+	bind:this={form}
 >
 	<div class="grid grid-cols-2 gap-4 pt-2 sm:grid-cols-4">
 		<fieldset class="rounded-md border border-neutral-600 px-2 pb-2">
@@ -135,31 +192,23 @@
 			<legend class="text-sm font-medium text-neutral-300">hmm</legend>
 			<div class="flex flex-col">
 				<label for="corner" class="mt-2 p-1 text-xs font-medium lowercase">corner:</label>
-				<select
+				<input
 					id="corner"
 					bind:value={corner}
 					class="w-full rounded-md bg-neutral-900 p-1 text-sm lowercase text-white"
-				>
-					<option value="bottom_left">bottom left</option>
-					<option value="bottom_right">bottom right</option>
-					<option value="top_left">top left</option>
-					<option value="top_right">top right</option>
-				</select>
+					disabled
+				/>
 			</div>
 			<div class="flex flex-col">
 				<label for="milling_direction" class="mt-2 p-1 text-xs font-medium lowercase">
 					milling direction:
 				</label>
-				<select
+				<input
 					id="milling_direction"
 					bind:value={milling_direction}
 					class="w-full rounded-md bg-neutral-900 p-1 text-sm lowercase text-white"
-				>
-					<option value="right">right</option>
-					<option value="left">left</option>
-					<option value="up">up</option>
-					<option value="down">down</option>
-				</select>
+					disabled
+				/>
 			</div>
 			<div class="flex flex-col">
 				<label for="step_over" class="mt-2 p-1 text-xs font-medium lowercase">step over:</label>
@@ -217,6 +266,26 @@
 						<marker id="arrow" orient="auto" markerWidth="3" markerHeight="2" refX="0.2" refY="1">
 							<path d="M0,0 V2 L1,1 Z" fill="#ffffff" />
 						</marker>
+						<marker
+							id="arrow-dimmed"
+							orient="auto"
+							markerWidth="3"
+							markerHeight="2"
+							refX="0.2"
+							refY="1"
+						>
+							<path d="M0,0 V2 L1,1 Z" fill="#525252" />
+						</marker>
+						<marker
+							id="arrow-path"
+							orient="auto"
+							markerWidth="6"
+							markerHeight="4"
+							refX="0.2"
+							refY="2"
+						>
+							<path d="M0,0 V4 L2,2 Z" fill="#525252" />
+						</marker>
 					</defs>
 
 					<!-- background -->
@@ -228,105 +297,97 @@
 					<circle cx="10" cy="110" r="2" fill="#ffffff" />
 					<circle cx="110" cy="110" r="2" fill="#ffffff" />
 
-					<!-- top left -> down -->
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<!-- svelte-ignore a11y-no-static-element-interactions-->
-					<line
-						x1="10"
-						y1="15"
-						x2="10"
-						y2="30"
-						stroke="#525252"
-						fill="#525252"
-						stroke-width="6"
-						marker-end="url(#arrow)"
-						class:text-white={true}
-						on:click={() => console.log('clicked')}
+					<DirectionLine
+						x1={10}
+						y1={15}
+						x2={10}
+						y2={30}
+						this_corner="top_left"
+						this_direction="down"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- top left -> right -->
-					<line
-						x1="15"
-						y1="10"
-						x2="30"
-						y2="10"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={15}
+						y1={10}
+						x2={30}
+						y2={10}
+						this_corner="top_left"
+						this_direction="right"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- top right -> left -->
-					<line
-						x1="105"
-						y1="10"
-						x2="90"
-						y2="10"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={105}
+						y1={10}
+						x2={90}
+						y2={10}
+						this_corner="top_right"
+						this_direction="left"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- top right -> down -->
-					<line
-						x1="110"
-						y1="15"
-						x2="110"
-						y2="30"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={110}
+						y1={15}
+						x2={110}
+						y2={30}
+						this_corner="top_right"
+						this_direction="down"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- bottom right -> up -->
-					<line
-						x1="110"
-						y1="105"
-						x2="110"
-						y2="90"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={110}
+						y1={105}
+						x2={110}
+						y2={90}
+						this_corner="bottom_right"
+						this_direction="up"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- bottom right -> left -->
-					<line
-						x1="105"
-						y1="110"
-						x2="90"
-						y2="110"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={105}
+						y1={110}
+						x2={90}
+						y2={110}
+						this_corner="bottom_right"
+						this_direction="left"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- bottom left -> right -->
-					<line
-						x1="15"
-						y1="110"
-						x2="30"
-						y2="110"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={15}
+						y1={110}
+						x2={30}
+						y2={110}
+						this_corner="bottom_left"
+						this_direction="right"
+						bind:corner
+						bind:milling_direction
 					/>
 
-					<!-- bottom left -> up -->
-					<line
-						x1="10"
-						y1="105"
-						x2="10"
-						y2="90"
-						stroke="#ffffff"
-						fill="#ffffff"
-						stroke-width="6"
-						marker-end="url(#arrow)"
+					<DirectionLine
+						x1={10}
+						y1={105}
+						x2={10}
+						y2={90}
+						this_corner="bottom_left"
+						this_direction="up"
+						bind:corner
+						bind:milling_direction
 					/>
+
+					{#if show}
+						<DirectionMap></DirectionMap>
+					{/if}
 				</svg>
 			</div>
 		</fieldset>
