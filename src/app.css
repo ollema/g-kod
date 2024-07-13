@@ -5,3 +5,7 @@
 body {
 	@apply min-h-[100vh] bg-neutral-900 font-mono text-white;
 }
+
+body {
+	font-family: 'Iosevka Etoile', monospace;
+}
