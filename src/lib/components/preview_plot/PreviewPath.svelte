@@ -64,7 +64,8 @@
 	<polyline
 		{points}
 		fill="none"
-		stroke="#262626"
+		stroke="#3b82f6"
+		opacity="0.5"
 		stroke-width="1"
 		in:draw|global={{ duration: 3000, easing: linear }}
 	/>

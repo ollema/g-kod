@@ -62,10 +62,10 @@
 	<PreviewPath {code} {transformCoordinates} />
 
 	<!-- small circle in each corner -->
-	<PreviewCorner cx={xmin} cy={ymin} />
-	<PreviewCorner cx={xmax} cy={ymin} />
-	<PreviewCorner cx={xmin} cy={ymax} />
-	<PreviewCorner cx={xmax} cy={ymax} />
+	<PreviewCorner cx={xmin} cy={ymin} {corner} this_corner="top_left" />
+	<PreviewCorner cx={xmax} cy={ymin} {corner} this_corner="top_right" />
+	<PreviewCorner cx={xmin} cy={ymax} {corner} this_corner="bottom_left" />
+	<PreviewCorner cx={xmax} cy={ymax} {corner} this_corner="bottom_right" />
 
 	<!-- arrows -->
 	<PreviewDirection

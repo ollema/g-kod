@@ -18,7 +18,7 @@
 		generate_code
 	} from '../g_kod.gleam';
 
-	let x_max: number = 100.0;
+	let x_max: number = 80.0;
 	let y_max: number = 100.0;
 	let z_initial_height: number = 0.0;
 	let z_final_height: number = -5.0;
@@ -193,9 +193,9 @@
 		</fieldset>
 
 		<fieldset class="rounded-md border border-neutral-600 px-2 pb-2">
-			<legend class="text-sm font-medium text-neutral-300">hmm</legend>
+			<legend class="text-sm font-medium text-neutral-300">milling parameters</legend>
 			<div class="flex flex-col">
-				<label for="corner" class="mt-2 p-1 text-xs font-medium lowercase">corner:</label>
+				<label for="corner" class="mt-2 p-1 text-xs font-medium lowercase">start corner:</label>
 				<input
 					id="corner"
 					bind:value={corner}
