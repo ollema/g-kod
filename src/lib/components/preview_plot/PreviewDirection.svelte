@@ -24,7 +24,7 @@
 		{y1}
 		{x2}
 		{y2}
-		stroke-width="6"
+		stroke-width="4"
 		stroke={corner === this_corner && milling_direction === this_direction ? '#ffffff' : '#525252'}
 		fill={corner === this_corner && milling_direction === this_direction ? '#ffffff' : '#525252'}
 		marker-end={corner === this_corner && milling_direction === this_direction
@@ -32,10 +32,10 @@
 			: 'url(#arrow-dimmed)'}
 	/>
 	<rect
-		x={Math.min(x1, x2) - 10}
-		y={Math.min(y1, y2) - 10}
-		width={Math.abs(x2 - x1) + 20}
-		height={Math.abs(y2 - y1) + 20}
+		x={Math.min(x1, x2) - 3}
+		y={Math.min(y1, y2) - 3}
+		width={Math.abs(x2 - x1) + 6}
+		height={Math.abs(y2 - y1) + 6}
 		fill="transparent"
 	/>
 </g>

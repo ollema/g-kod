@@ -1,7 +1,8 @@
 <script lang="ts">
-	import PreviewPlot from './PreviewPlot.svelte';
+	import PreviewPlot from '$lib/components/preview_plot';
 
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
+
 	import {
 		FaceMillingOptions,
 		FaceMilling,
@@ -17,21 +18,23 @@
 		generate_code
 	} from '../g_kod.gleam';
 
-	let x_max: number = 10.0;
-	let y_max: number = 10.0;
+	let x_max: number = 100.0;
+	let y_max: number = 100.0;
 	let z_initial_height: number = 0.0;
 	let z_final_height: number = -5.0;
 	let z_safe_height: number = 5.0;
 	let z_depth_of_cut: number = -2.0;
-	let step_over: number = 0.5;
+	let step_over: number = 0.8;
 	let corner: 'bottom_left' | 'bottom_right' | 'top_left' | 'top_right' = 'bottom_left';
 	let milling_direction: 'right' | 'left' | 'up' | 'down' = 'right';
 
-	let diameter: number = 5.0;
+	let diameter: number = 10.0;
 	let speed: number = 10000;
 	let feed: number = 2000;
 
 	let code = '';
+	let workpieceWidth = x_max;
+	let workpieceHeight = y_max;
 
 	function generate_face_milling_code() {
 		let crnr: BottomLeft | BottomRight | TopLeft | TopRight;
@@ -91,7 +94,13 @@
 	let form: HTMLFormElement;
 
 	async function handleSubmit() {
+		// zero out code to force redraw of preview plot
+		code = '';
+		await tick();
 		code = generate_face_milling_code();
+
+		workpieceWidth = x_max;
+		workpieceHeight = y_max;
 	}
 
 	onMount(() => {
@@ -251,8 +260,16 @@
 		</fieldset>
 
 		<fieldset class="col-span-2 rounded-md border border-neutral-600 p-2">
-			<div>
-				<PreviewPlot bind:corner bind:milling_direction />
+			<div class="h-60">
+				{#if code}
+					<PreviewPlot
+						{code}
+						{workpieceWidth}
+						{workpieceHeight}
+						bind:corner
+						bind:milling_direction
+					/>
+				{/if}
 			</div>
 		</fieldset>
 	</div>
