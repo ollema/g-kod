@@ -1,10 +1,12 @@
 <script>
 	import '../app.css';
 	import '@fontsource/iosevka-etoile';
+
+	import Logo from '$lib/components/logo';
 </script>
 
-<nav class="m-4 flex h-14 items-center rounded-md bg-neutral-800 p-4 font-semibold text-white">
-	<a href="/"> g-kod.xyz </a>
+<nav class="m-4 flex h-20 items-center rounded-md bg-neutral-800 p-4 font-semibold text-white">
+	<a href="/" class="h-full"><Logo /></a>
 </nav>
 
 <div>
