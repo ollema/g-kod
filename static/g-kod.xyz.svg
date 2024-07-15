@@ -1,0 +1,507 @@
+<svg viewBox="0 0 610 100" xmlns="http://www.w3.org/2000/svg" height="100%">
+  <g id="g" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 5 15
+            L 15 5
+            L 75 5
+            L 65 15
+            Z" fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 65 15
+            L 75 5
+            L 75 25
+            L 65 35
+            Z" fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 25 35
+            L 25 75
+            L 35 65
+            L 35 35
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 25 75
+            L 35 65
+            L 45 65
+            L 45 75
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 45 55
+            L 55 45
+            L 75 45
+            L 65 55
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 65 55
+            L 75 45
+            L 75 85
+            L 65 95
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 65 15
+            L 5 15
+            L 5 95
+            L 65 95
+            L 65 55
+            L 45 55
+            L 45 75
+            L 25 75
+            L 25 35
+            L 65 35
+            Z" fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+  <g id="dash" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 80 45
+            L 90 35
+            L 120 35
+            L 110 45
+            Z" fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 110 45
+            L 120 35
+            L 120 55
+            L 110 65
+            Z" fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 110 45
+            L 80 45
+            L 80 65
+            L 110 65
+            Z" fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+  <g id="k" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 125 15
+            L 135 5
+            L 155 5
+            L 145 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 145 15
+            L 155 5
+            L 155 35
+            L 145 45
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 145 45
+            L 155 35
+            L 165 35
+            L 165 45
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 165 15
+            L 175 5
+            L 195 5
+            L 185 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 185 15
+            L 195 5
+            L 195 35
+            L 185 45
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+                M 175 55
+                L 185 45
+                L 195 55
+                L 185 65
+                Z
+                " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 185 65
+            L 195 55
+            L 195 85
+            L 185 95
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 145 65
+            L 145 95
+            L 155 85
+            L 155 65
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 185 15
+            L 165 15
+            L 165 45
+            L 145 45
+            L 145 15
+            L 125 15
+            L 125 95
+            L 145 95
+            L 145 65
+            L 165 65
+            L 165 65
+            L 165 95
+            L 185 95
+            L 185 65
+            L 175 55
+            L 185 45
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+  <g id="o" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 200 15
+            L 210 5
+            L 270 5
+            L 260 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 260 15
+            L 270 5
+            L 270 85
+            L 260 95
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 220 35
+            L 220 75
+            L 230 65
+            L 230 35
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 220 75
+            L 230 65
+            L 240 65
+            L 240 75
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 260 15
+            L 200 15
+            L 200 95
+            L 260 95
+            Z
+            M 240 75
+            L 220 75
+            L 220 35
+            L 240 35
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round" fill-rule="evenodd">
+    </path>
+  </g>
+  <g id="d" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 275 15
+            L 285 5
+            L 335 5
+            L 325 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 325 15
+            L 335 5
+            L 345 15
+            L 335 25
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 335 25
+            L 345 15
+            L 345 75
+            L 335 85
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 295 35
+            L 295 75
+            L 305 65
+            L 305 35
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 295 75
+            L 305 65
+            L 315 65
+            L 315 75
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 325 15
+            L 275 15
+            L 275 95
+            L 325 95
+            L 335 85
+            L 335 25
+            Z
+            M 315 75
+            L 295 75
+            L 295 35
+            L 315 35
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round" fill-rule="evenodd">
+    </path>
+  </g>
+  <g id="dot" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 350 75
+            L 360 65
+            L 379.99998 65
+            L 369.99998 75
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 369.99998 75
+            L 379.99998 65
+            L 379.99998 85
+            L 369.99998 95
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 369.99998 75
+            L 350 75
+            L 350 95
+            L 369.99998 95
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+  <g id="x" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 384.99998 15
+            L 394.99998 5
+            L 414.99998 5
+            L 404.99998 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 404.99998 15
+            L 414.99998 5
+            L 414.99998 35
+            L 404.99998 45
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 404.99998 45
+            L 414.99998 35
+            L 424.99998 35
+            L 424.99998 45
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 424.99998 15
+            L 434.99998 5
+            L 454.99998 5
+            L 444.99998 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 444.99998 15
+            L 454.99998 5
+            L 454.99998 35
+            L 444.99998 45
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 434.99998 55
+            L 444.99998 45
+            L 454.99998 55
+            L 444.99998 65
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 444.99998 65
+            L 454.99998 55
+            L 454.99998 85
+            L 444.99998 95
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 404.99998 65
+            L 404.99998 95
+            L 414.99998 85
+            L 414.99998 65
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 444.99998 15
+            L 424.99998 15
+            L 424.99998 45
+            L 404.99998 45
+            L 404.99998 15
+            L 384.99998 15
+            L 384.99998 45
+            L 394.99998 55
+            L 384.99998 65
+            L 384.99998 95
+            L 404.99998 95
+            L 404.99998 65
+            L 424.99998 65
+            L 424.99998 65
+            L 424.99998 95
+            L 444.99998 95
+            L 444.99998 65
+            L 434.99998 55
+            L 444.99998 45
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+  <g id="y" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 459.99998 15
+            L 469.99998 5
+            L 489.99998 5
+            L 479.99998 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 479.99998 15
+            L 489.99998 5
+            L 489.99998 35
+            L 479.99998 45
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 479.99998 45
+            L 489.99998 35
+            L 499.99998 35
+            L 499.99998 45
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 499.99998000000005 15
+            L 509.99998000000005 5
+            L 529.99998 5
+            L 519.99998 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 519.99998 15
+            L 529.99998 5
+            L 529.99998 45
+            L 519.99998 55
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 499.99998000000005 65
+            L 499.99998000000005 95
+            L 509.99998000000005 85
+            L 509.99998000000005 65
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 519.99998 15
+            L 499.99998000000005 15
+            L 499.99998000000005 45
+            L 479.99998 45
+            L 479.99998 15
+            L 459.99998 15
+            L 459.99998 55
+            L 469.99998 65
+            L 479.99998 65
+            L 479.99998 95
+            L 499.99998000000005 95
+            L 499.99998000000005 65
+            L 509.99998000000005 65
+            L 519.99998 55
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+  <g id="z" class="hover-translate svelte-2m1lkz">
+    <path d="
+            M 534.99998 15
+            L 544.99998 5
+            L 604.99998 5
+            L 594.99998 15
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 594.99998 15
+            L 604.99998 5
+            L 604.99998 25
+            L 594.99998 35
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 559.99998 75
+            L 569.99998 65
+            L 604.99998 65
+            L 594.99998 75
+            Z
+            " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 594.99998 75
+            L 604.99998 65
+            L 604.99998 85
+            L 594.99998 95
+            Z
+            " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+    </path>
+    <path d="
+            M 594.99998 15
+            L 534.99998 15
+            L 534.99998 35
+            L 569.99998 35
+            L 534.99998 75
+            L 534.99998 95
+            L 594.99998 95
+            L 594.99998 75
+            L 559.99998 75
+            L 594.99998 35
+            Z
+            " fill="white" stroke="black" stroke-linejoin="round">
+    </path>
+  </g>
+</svg>

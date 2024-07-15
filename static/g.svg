@@ -1,0 +1,63 @@
+<svg viewBox="-5 4 92 92" xmlns="http://www.w3.org/2000/svg" height="100%">
+    <g id="g" class="hover-translate svelte-2m1lkz">
+        <path d="
+                M 5 15
+                L 15 5
+                L 75 5
+                L 65 15
+                Z" fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+        </path>
+        <path d="
+                M 65 15
+                L 75 5
+                L 75 25
+                L 65 35
+                Z" fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+        </path>
+        <path d="
+                M 25 35
+                L 25 75
+                L 35 65
+                L 35 35
+                Z
+                " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+        </path>
+        <path d="
+                M 25 75
+                L 35 65
+                L 45 65
+                L 45 75
+                Z
+                " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+        </path>
+        <path d="
+                M 45 55
+                L 55 45
+                L 75 45
+                L 65 55
+                Z
+                " fill="hsl(200, 100%, 70%)" stroke="black" stroke-linejoin="round">
+        </path>
+        <path d="
+                M 65 55
+                L 75 45
+                L 75 85
+                L 65 95
+                Z
+                " fill="hsl(240, 100%, 30%)" stroke="black" stroke-linejoin="round">
+        </path>
+        <path d="
+                M 65 15
+                L 5 15
+                L 5 95
+                L 65 95
+                L 65 55
+                L 45 55
+                L 45 75
+                L 25 75
+                L 25 35
+                L 65 35
+                Z" fill="white" stroke="black" stroke-linejoin="round">
+        </path>
+    </g>
+</svg>

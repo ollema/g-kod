@@ -9,7 +9,8 @@
 		"check": "echo 'running svelte-check\n' && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && echo '\nrunning gleam check\n' && gleam check",
 		"test": "echo 'running vitest\n' && vitest run && echo '\nrunning gleam test\n' && gleam test",
 		"lint": "prettier --check . && eslint .",
-		"format": "echo 'running prettier\n' && prettier --write . && echo '\nrunning gleam format\n' && gleam format"
+		"format": "echo 'running prettier\n' && prettier --write . && echo '\nrunning gleam format\n' && gleam format",
+		"generate-pwa-assets": "pwa-assets-generator"
 	},
 	"devDependencies": {
 		"@fontsource/iosevka-etoile": "^5.0.11",
@@ -19,6 +20,7 @@
 		"@sveltejs/kit": "^2.5.18",
 		"@sveltejs/vite-plugin-svelte": "^3.1.1",
 		"@types/eslint": "^8.56.10",
+		"@vite-pwa/assets-generator": "^0.2.4",
 		"autoprefixer": "^10.4.19",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
