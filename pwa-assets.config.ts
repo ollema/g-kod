@@ -12,13 +12,11 @@ const minimal2023Preset: Preset = {
 	},
 	maskable: {
 		sizes: [512],
-		padding: 0.2,
-		resizeOptions: { background: '#262626', fit: 'contain' }
+		resizeOptions: { background: '#171717', fit: 'contain' }
 	},
 	apple: {
 		sizes: [180],
-		padding: 0.0,
-		resizeOptions: { background: '#262626', fit: 'contain' }
+		resizeOptions: { background: '#171717', fit: 'contain' }
 	}
 };
 
