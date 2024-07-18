@@ -1,0 +1,41 @@
+---
+version: 1.1.8
+title: bottom left -> up
+file: ./test/g_kod_test.gleam
+test_name: face_milling_test
+---
+G17 (select xy plane)
+G21 (select millimeters)
+G40 (cancel cutter radius compensation)
+G49 (cancel tool length offset)
+G54 (select first work coordinate system)
+G90 (enable absolute positioning mode)
+G94 (enable feed per minute mode)
+
+(tool - diameter: 10.0 mm)
+S10000 M03 (set spindle speed to 10000 and start spindle clockwise)
+
+G00 X0.0 Y0.0 Z5.0 (rapid move to safe position)
+
+G01 Z0.0 (move to start point)
+
+G01 Z-2.0 (start face milling pass at -2.0 mm)
+G01 X10.0
+G01 Y5.0
+G01 X0.0
+G01 Y10.0
+G01 X10.0
+
+G01 Z-4.0 (start face milling pass at -4.0 mm)
+G01 X0.0
+G01 Y5.0
+G01 X10.0
+G01 Y0.0
+G01 X0.0
+
+G01 Z-5.0 (start face milling pass at -5.0 mm)
+G01 X10.0
+G01 Y5.0
+G01 X0.0
+G01 Y10.0
+G01 X10.0

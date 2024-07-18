@@ -1,7 +1,7 @@
 name = "g_kod"
 version = "0.0.1"
 target = "javascript"
-dev-dependencies = { gleeunit = ">= 1.2.0 and < 2.0.0"}
+dev-dependencies = { gleeunit = ">= 1.2.0 and < 2.0.0", birdie = ">= 1.1.8 and < 2.0.0"}
 
 [javascript]
 typescript_declarations = true
