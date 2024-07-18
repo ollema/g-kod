@@ -280,6 +280,14 @@
 	>
 		generate code
 	</button>
+
+	<button
+		type="button"
+		class="ml-2 mt-4 rounded-md bg-blue-500 px-3 py-2 text-neutral-900 hover:bg-blue-600"
+		on:click={() => navigator.clipboard.writeText(code)}
+	>
+		copy code
+	</button>
 </form>
 
 <div class="m-4 rounded-md bg-neutral-800 p-4 text-xs">
