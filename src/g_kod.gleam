@@ -75,6 +75,7 @@ pub fn generate_face_milling_code(
       code,
       position,
       Position(..position, z: 0.0),
+      Some(tool.feed),
       Some("move to start point"),
     )
   let code = list.append(code, [""])
@@ -99,6 +100,7 @@ pub fn do_face_milling(
           code,
           position,
           Position(..position, z: new_z),
+          None,
           Some(
             format("start face milling pass at {Z} mm", [
               #("Z", float.to_string(new_z)),
@@ -152,7 +154,7 @@ pub fn do_face_milling_pass(
   tool: Tool,
 ) {
   let new_position = next_sidewise_position(code, position, options)
-  let #(code, position) = linear_move(code, position, new_position, None)
+  let #(code, position) = linear_move(code, position, new_position, None, None)
   let new_position = next_forward_position(code, position, options, tool)
 
   case position.x == new_position.x, position.y == new_position.y {
@@ -161,7 +163,8 @@ pub fn do_face_milling_pass(
       #(code, position)
     }
     _, _ -> {
-      let #(code, position) = linear_move(code, position, new_position, None)
+      let #(code, position) =
+        linear_move(code, position, new_position, None, None)
       do_face_milling_pass(code, position, options, tool)
     }
   }
@@ -269,6 +272,7 @@ pub fn linear_move(
   code: GCode,
   old_position: Position,
   new_position: Position,
+  feed: Option(Int),
   comment: Option(String),
 ) -> #(GCode, Position) {
   let command = "G01"
@@ -286,6 +290,10 @@ pub fn linear_move(
     False -> command <> " Z" <> float.to_string(new_position.z)
 
     True -> command
+  }
+  let command = case feed {
+    Some(feed) -> command <> " F" <> int.to_string(feed)
+    None -> command
   }
   let command = case comment {
     Some(comment) -> command <> " (" <> comment <> ")"
