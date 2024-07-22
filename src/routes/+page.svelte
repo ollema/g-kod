@@ -17,6 +17,7 @@
 		Down,
 		generate_code
 	} from '../g_kod.gleam';
+	import App from '$lib/components/render/App.svelte';
 
 	let x_max: number = 80.0;
 	let y_max: number = 100.0;
@@ -33,8 +34,8 @@
 	let feed: number = 2000;
 
 	let code = '';
-	let workpieceWidth = x_max;
-	let workpieceHeight = y_max;
+	let width = x_max;
+	let height = y_max;
 
 	function generate_face_milling_code() {
 		let crnr: BottomLeft | BottomRight | TopLeft | TopRight;
@@ -99,8 +100,8 @@
 		await tick();
 		code = generate_face_milling_code();
 
-		workpieceWidth = x_max;
-		workpieceHeight = y_max;
+		width = x_max;
+		height = y_max;
 	}
 
 	onMount(() => {
@@ -260,14 +261,21 @@
 		</fieldset>
 
 		<fieldset class="col-span-2 rounded-md border border-neutral-600 p-2">
-			<div class="h-60">
+			<div class="h-80">
 				{#if code}
-					<PreviewPlot
-						{code}
-						{workpieceWidth}
-						{workpieceHeight}
-						bind:corner
-						bind:milling_direction
+					<PreviewPlot {code} {width} {height} bind:corner bind:milling_direction />
+				{/if}
+			</div>
+		</fieldset>
+
+		<fieldset class="col-span-2 rounded-md border border-neutral-600 p-2">
+			<div class="h-80">
+				{#if code}
+					<App
+						stock_width={width}
+						stock_height={height}
+						stock_depth={Math.abs(z_final_height * 2)}
+						tool_radius={diameter / 2}
 					/>
 				{/if}
 			</div>

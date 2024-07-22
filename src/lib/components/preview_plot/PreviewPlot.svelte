@@ -6,25 +6,25 @@
 	export let corner: 'bottom_left' | 'bottom_right' | 'top_left' | 'top_right';
 	export let milling_direction: 'right' | 'left' | 'up' | 'down';
 
-	export let workpieceWidth: number;
-	export let workpieceHeight: number;
+	export let width: number;
+	export let height: number;
 	export let code: string;
 
 	const targetSize = 100;
 
 	// calculate the aspect ratio of the workpiece
-	const aspectRatio = workpieceWidth / workpieceHeight;
+	const aspectRatio = width / height;
 
 	// determine the scaling factor to maintain the aspect ratio
-	$: scaleFactor = aspectRatio > 1 ? targetSize / workpieceWidth : targetSize / workpieceHeight;
+	$: scaleFactor = aspectRatio > 1 ? targetSize / width : targetSize / height;
 
 	// calculate the dimensions of the displayed rectangle to fit the target size while maintaining the aspect ratio
-	$: rectWidth = workpieceWidth * scaleFactor;
-	$: rectHeight = workpieceHeight * scaleFactor;
+	$: rectWidth = width * scaleFactor;
+	$: rectHeight = height * scaleFactor;
 
 	function transformCoordinates(coord: { x: number; y: number }) {
-		const x = xmin + (coord.x / workpieceWidth) * rectWidth;
-		const y = ymax - (coord.y / workpieceHeight) * rectHeight;
+		const x = xmin + (coord.x / width) * rectWidth;
+		const y = ymax - (coord.y / height) * rectHeight;
 		return { x, y };
 	}
 
@@ -40,7 +40,7 @@
 <svg
 	{viewBox}
 	preserveAspectRatio="xMidYMid meet"
-	class="h-full max-h-60 w-full"
+	class="h-full max-h-80 w-full"
 	xmlns="http://www.w3.org/2000/svg"
 >
 	<!-- arrow marker definitions -->
