@@ -277,13 +277,7 @@
 		<fieldset class="col-span-2 rounded-md border border-neutral-600 p-2">
 			<div class="h-80">
 				{#if g_code}
-					<App
-						g_code={g_code_lines}
-						stock_width={width}
-						stock_height={height}
-						stock_depth={Math.abs(z_final_height * 2)}
-						tool_radius={diameter / 2}
-					/>
+					<App g_code={g_code_lines} />
 				{/if}
 			</div>
 		</fieldset>

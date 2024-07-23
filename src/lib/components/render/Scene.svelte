@@ -1,73 +1,62 @@
 <script lang="ts">
+	import Camera from './Camera.svelte';
+	import Gizmo from './Gizmo.svelte';
+	import Lighting from './Lighting.svelte';
+	import AxisArrows from './AxisArrows.svelte';
+	import Stock from './Stock.svelte';
+	import Tool from './Tool.svelte';
+
+	import type { Position } from '$lib/g_code/types';
+	import {
+		find_initial_feed_rate,
+		find_max_dimensions,
+		find_start_position,
+		find_tool_radius,
+		interpret_g_code_line
+	} from '$lib/g_code/parser';
+	import { interpolate } from '$lib/g_code/interpolate';
+
 	import type { Writable } from 'svelte/store';
 
-	import { T, useTask } from '@threlte/core';
-	import { Gizmo, OrbitControls } from '@threlte/extras';
+	import { useTask } from '@threlte/core';
 	import { Vector3, Object3D } from 'three';
-
-	import { parse_g_code_line } from '$lib/g_code/parser';
 
 	Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
-	// g-code to be rendered
 	export let g_code: string[];
-
-	// index of current g-code line being executed
 	export let current_line_index = 0;
 
-	// get start position from first G00 command
-	let start_position = { x: 0, y: 0, z: 0 };
-	g_code.find((line) => {
-		const command = parse_g_code_line(line);
-		if (command && command.cmd === 'G00') {
-			start_position = { x: command.X || 0, y: command.Y || 0, z: command.Z || 0 };
-			return true;
-		}
-		return false;
-	});
-
-	// initialize target position to start position
-	let target_position = { ...start_position };
-
-	// actual stock dimensions
-	export let stock_width: number;
-	export let stock_height: number;
-	export let stock_depth: number;
-
-	// scale factor to fit scene into view
 	export let external_scale_factor: number = 5.0;
-	const scale_factor =
-		(1 / Math.max(stock_width, stock_height, stock_depth)) * external_scale_factor;
 
-	// scaled stock dimensions
-	const scaled_stock_width = stock_width * scale_factor;
-	const scaled_stock_height = stock_height * scale_factor;
-	const scaled_stock_depth = stock_depth * scale_factor;
+	export let speed: Writable<number[]>;
 
-	// center of stock
+	let start_position = find_start_position(g_code);
+	let current_position = { ...start_position };
+	let target_position: Position | undefined;
+
+	let { x_max, y_max, z_max } = find_max_dimensions(g_code);
+	const scale_factor = (1 / Math.max(x_max, y_max, z_max)) * external_scale_factor;
+	const scaled_stock_width = x_max * scale_factor;
+	const scaled_stock_height = y_max * scale_factor;
+	const scaled_stock_depth = z_max * scale_factor;
 	const center_of_stock: [number, number, number] = [
 		scaled_stock_width / 2,
 		scaled_stock_height / 2,
 		-scaled_stock_depth / 2
 	];
 
-	// actual tool radius
-	export let tool_radius: number;
-
-	// scaled tool radius and tool heights
+	let tool_radius = find_tool_radius(g_code);
 	const scaled_tool_radius = tool_radius * scale_factor;
-	const cutter_length = scaled_stock_depth / 2 + 2 * scale_factor;
-	const holder_length = 15 * scale_factor;
-	const cutter_z_offset = cutter_length / 2;
-	const holder_z_offset = cutter_length + holder_length / 2;
 
-	export let speed: Writable<number[]>;
-	let feed_rate = 2000; // use a sane default feed rate
+	let feed_rate = find_initial_feed_rate(g_code);
 
 	// actual x, y, z coordinates
 	export let x = start_position.x;
+	$: x = current_position.x;
 	export let y = start_position.y;
-	export let z = start_position.z * 2;
+	$: y = current_position.y;
+	export let z = start_position.z;
+	$: z = current_position.z;
 
 	// scaled x, y, z coordinates
 	$: scaled_x = x * scale_factor;
@@ -80,66 +69,44 @@
 		(delta) => {
 			playing = true;
 
-			if (current_line_index >= g_code.length) {
-				_pause();
-				return;
+			// if there is no target position, then we need to interpret the next g_code line
+			if (target_position === undefined) {
+				const { new_position, new_feed_rate } = interpret_g_code_line(
+					g_code[current_line_index],
+					current_position,
+					feed_rate
+				);
+
+				target_position = new_position;
+				feed_rate = new_feed_rate;
 			}
 
-			const command = parse_g_code_line(g_code[current_line_index]);
+			// then interpolate between current and target position
+			if (target_position !== undefined) {
+				current_position = interpolate(
+					current_position,
+					target_position,
+					feed_rate,
+					delta,
+					$speed[0]
+				);
 
-			// move tool if G00 or G01 command
-			if (command && (command.cmd === 'G00' || command.cmd === 'G01')) {
-				const { cmd, X, Y, Z, F } = command;
-				// rapid move
-				if (cmd === 'G00') feed_rate = 10000;
+				// if the new position is the same as the target position, then we have reached the target
+				// then we can set the target position to undefined and increase the current line index
+				if (x === target_position.x && y === target_position.y && z === target_position.z) {
+					target_position = undefined;
+					current_line_index++;
 
-				if (F) feed_rate = F;
+					if (current_line_index >= g_code.length) {
+						_pause();
+						return;
+					}
 
-				target_position = {
-					x: X !== undefined ? X : target_position.x,
-					y: Y !== undefined ? Y : target_position.y,
-					z: Z !== undefined ? Z : target_position.z
-				};
-
-				const dx = target_position.x - x;
-				const dy = target_position.y - y;
-				const dz = target_position.z - z;
-
-				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-				const move_step = (feed_rate * (Math.pow($speed[0], 2) / 1000) * delta) / 60;
-
-				const normalized_dx = (dx / distance) * move_step;
-				const normalized_dy = (dy / distance) * move_step;
-				const normalized_dz = (dz / distance) * move_step;
-
-				const new_x = x + normalized_dx;
-				x =
-					Math.abs(target_position.x - new_x) < Math.abs(normalized_dx) ? target_position.x : new_x;
-
-				const new_y = y + normalized_dy;
-				y =
-					Math.abs(target_position.y - new_y) < Math.abs(normalized_dy) ? target_position.y : new_y;
-
-				const new_z = z + normalized_dz;
-				z =
-					Math.abs(target_position.z - new_z) < Math.abs(normalized_dz) ? target_position.z : new_z;
-
-				if (
-					!(
-						Math.abs(target_position.x - x) < 0.01 &&
-						Math.abs(target_position.y - y) < 0.01 &&
-						Math.abs(target_position.z - z) < 0.01
-					)
-				) {
-					// target not reached, return without incrementing line index
-					return;
+					if (stepping) {
+						_pause();
+						stepping = false;
+					}
 				}
-			}
-
-			current_line_index++;
-			if (stepping) {
-				_pause();
-				stepping = false;
 			}
 		},
 		{
@@ -150,15 +117,9 @@
 	function _reset() {
 		_stop();
 		playing = false;
-
-		// go to origin
-		x = start_position.x;
-		y = start_position.y;
-		z = start_position.z * 2;
-
-		// reset g_code line index and target position
+		current_position = { ...start_position };
 		current_line_index = 0;
-		target_position = { x: 0, y: 0, z: 0 };
+		target_position = undefined;
 	}
 
 	function _pause() {
@@ -177,66 +138,17 @@
 	export const pause = _pause;
 	export const step = _step;
 	export let playing: boolean = false;
-
-	// orbit controls
-	let autoRotate: boolean = false;
-	let enableDamping: boolean = true;
-	let rotateSpeed: number = 1;
-	let zoomToCursor: boolean = false;
-	let zoomSpeed: number = 1;
-	let minPolarAngle: number = 0;
-	let maxPolarAngle: number = Math.PI;
-	let enableZoom: boolean = true;
 </script>
 
 <!-- camera and controls -->
-<T.PerspectiveCamera makeDefault position={[4, -4, 4]}>
-	<OrbitControls
-		{enableDamping}
-		{autoRotate}
-		{rotateSpeed}
-		{zoomToCursor}
-		{zoomSpeed}
-		{minPolarAngle}
-		{maxPolarAngle}
-		{enableZoom}
-		target={center_of_stock}
-	/>
-</T.PerspectiveCamera>
+<Camera {center_of_stock} />
 
-<!-- gizmo -->
-<Gizmo horizontalPlacement="left" size={64} center={center_of_stock} />
+<Gizmo {center_of_stock} />
 
-<!-- light source -->
-<T.DirectionalLight position={[5, -10, 20]} />
+<Lighting />
 
-<!-- stock -->
-<T.Mesh position={center_of_stock}>
-	<T.BoxGeometry args={[scaled_stock_width, scaled_stock_height, scaled_stock_depth]} />
-	<T.MeshStandardMaterial color={'white'} transparent={true} opacity={0.6} />
-</T.Mesh>
+<Stock {center_of_stock} {scaled_stock_width} {scaled_stock_height} {scaled_stock_depth} />
 
-<!-- axes -->
-<T.ArrowHelper
-	args={[new Vector3(1, 0, 0), new Vector3(0, 0, 0), 3 * scaled_tool_radius, '#ff3653']}
-/>
-<T.ArrowHelper
-	args={[new Vector3(0, 1, 0), new Vector3(0, 0, 0), 3 * scaled_tool_radius, '#8adb00']}
-/>
-<T.ArrowHelper
-	args={[new Vector3(0, 0, 1), new Vector3(0, 0, 0), 3 * scaled_tool_radius, '#2c8fff']}
-/>
+<AxisArrows {scaled_tool_radius} />
 
-<!-- tool -->
-<T.Group position.x={scaled_x} position.y={scaled_y} position.z={scaled_z}>
-	<!-- cutter -->
-	<T.Mesh rotation.x={Math.PI / 2} position.z={cutter_z_offset}>
-		<T.CylinderGeometry args={[scaled_tool_radius, scaled_tool_radius, cutter_length, 32]} />
-		<T.MeshStandardMaterial color={'#ffd633'} />
-	</T.Mesh>
-	<!-- holder -->
-	<T.Mesh rotation.x={Math.PI / 2} position.z={holder_z_offset}>
-		<T.CylinderGeometry args={[scaled_tool_radius, scaled_tool_radius, holder_length, 32]} />
-		<T.MeshStandardMaterial color={'#666666'} />
-	</T.Mesh>
-</T.Group>
+<Tool {scaled_x} {scaled_y} {scaled_z} {scaled_tool_radius} {scale_factor} {scaled_stock_depth} />

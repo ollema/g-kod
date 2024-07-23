@@ -10,12 +10,6 @@
 
 	export let g_code: string[];
 
-	export let stock_width: number;
-	export let stock_height: number;
-	export let stock_depth: number;
-
-	export let tool_radius: number;
-
 	// props to bind
 	let x: number;
 	let y: number;
@@ -35,7 +29,7 @@
 		elements: { root, range, thumbs },
 		states: { value: speed }
 	} = createSlider({
-		defaultValue: [40],
+		defaultValue: [33],
 		min: 1,
 		max: 100,
 		step: 1
@@ -59,10 +53,6 @@
 	<Canvas>
 		<Scene
 			{g_code}
-			{stock_width}
-			{stock_height}
-			{stock_depth}
-			{tool_radius}
 			{speed}
 			bind:x
 			bind:y
