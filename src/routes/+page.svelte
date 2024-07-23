@@ -33,11 +33,17 @@
 	let speed: number = 10000;
 	let feed: number = 2000;
 
-	let code = '';
+	let g_code: string | undefined = undefined;
+	$: g_code_lines = g_code
+		? g_code
+				.split('\n')
+				.map((line) => line.trim())
+				.filter((line) => line.length > 0)
+		: [];
 	let width = x_max;
 	let height = y_max;
 
-	function generate_face_milling_code() {
+	function generate_face_milling_g_code() {
 		let crnr: BottomLeft | BottomRight | TopLeft | TopRight;
 		switch (corner) {
 			case 'bottom_left':
@@ -95,10 +101,10 @@
 	let form: HTMLFormElement;
 
 	async function handleSubmit() {
-		// zero out code to force redraw of preview plot
-		code = '';
+		// zero out g_code to force redraw of preview plot
+		g_code = undefined;
 		await tick();
-		code = generate_face_milling_code();
+		g_code = generate_face_milling_g_code();
 
 		width = x_max;
 		height = y_max;
@@ -262,16 +268,17 @@
 
 		<fieldset class="col-span-2 rounded-md border border-neutral-600 p-2">
 			<div class="h-80">
-				{#if code}
-					<PreviewPlot {code} {width} {height} bind:corner bind:milling_direction />
+				{#if g_code}
+					<PreviewPlot g_code={g_code_lines} {width} {height} bind:corner bind:milling_direction />
 				{/if}
 			</div>
 		</fieldset>
 
 		<fieldset class="col-span-2 rounded-md border border-neutral-600 p-2">
 			<div class="h-80">
-				{#if code}
+				{#if g_code}
 					<App
+						g_code={g_code_lines}
 						stock_width={width}
 						stock_height={height}
 						stock_depth={Math.abs(z_final_height * 2)}
@@ -292,12 +299,12 @@
 	<button
 		type="button"
 		class="ml-2 mt-4 rounded-md bg-blue-500 px-3 py-2 text-neutral-900 hover:bg-blue-600"
-		on:click={() => navigator.clipboard.writeText(code)}
+		on:click={() => navigator.clipboard.writeText(g_code ?? '')}
 	>
 		copy code
 	</button>
 </form>
 
 <div class="m-4 rounded-md bg-neutral-800 p-4 text-xs">
-	<div class="whitespace-pre-wrap">{code}</div>
+	<div class="whitespace-pre-wrap">{g_code}</div>
 </div>

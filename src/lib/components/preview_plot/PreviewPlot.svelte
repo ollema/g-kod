@@ -8,7 +8,7 @@
 
 	export let width: number;
 	export let height: number;
-	export let code: string;
+	export let g_code: string[];
 
 	const targetSize = 100;
 
@@ -59,7 +59,7 @@
 	<!-- background -->
 	<rect fill="#171717" stroke="none" x={xmin} y={ymin} width={rectWidth} height={rectHeight} />
 
-	<PreviewPath {code} {transformCoordinates} />
+	<PreviewPath {g_code} {transformCoordinates} />
 
 	<!-- small circle in each corner -->
 	<PreviewCorner cx={xmin} cy={ymin} {corner} this_corner="top_left" />

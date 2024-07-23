@@ -2,18 +2,16 @@
 	import { draw } from 'svelte/transition';
 	import { linear } from 'svelte/easing';
 
-	export let code: string;
+	export let g_code: string[];
 	export let transformCoordinates: (coord: { x: number; y: number }) => { x: number; y: number };
 
-	function extractCoordinates(code: string): { x: number; y: number }[] {
-		const lines = code.split('\n');
-
+	function extractCoordinates(g_code: string[]): { x: number; y: number }[] {
 		const coordinates: { x: number; y: number }[] = [];
 		let isFirstPass = false;
 		let currentX: number | null = null;
 		let currentY: number | null = null;
 
-		for (const line of lines) {
+		for (const line of g_code) {
 			// determine initial X and Y coordinates from G00 or G01 commands
 			const initialMatch = line.match(/G0[01]\s+X([\d.-]+)\s+Y([\d.-]+)/);
 			if (initialMatch) {
@@ -50,7 +48,7 @@
 		return coordinates;
 	}
 
-	$: coordinates = extractCoordinates(code);
+	$: coordinates = extractCoordinates(g_code);
 
 	$: points = coordinates
 		.map((coord) => {
