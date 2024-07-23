@@ -1,7 +1,10 @@
 <script lang="ts">
+	import type { Writable } from 'svelte/store';
+
 	import { T, useTask } from '@threlte/core';
 	import { Gizmo, OrbitControls } from '@threlte/extras';
 	import { Vector3, Object3D } from 'three';
+
 	import { parse_g_code_line } from '$lib/g_code/parser';
 
 	Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
@@ -58,6 +61,7 @@
 	const cutter_z_offset = cutter_length / 2;
 	const holder_z_offset = cutter_length + holder_length / 2;
 
+	export let speed: Writable<number[]>;
 	let feed_rate = 2000; // use a sane default feed rate
 
 	// actual x, y, z coordinates
@@ -72,8 +76,10 @@
 
 	let stepping: boolean = false;
 
-	const { start: _start, stop: _pause } = useTask(
+	const { start: _start, stop: _stop } = useTask(
 		(delta) => {
+			playing = true;
+
 			if (current_line_index >= g_code.length) {
 				_pause();
 				return;
@@ -100,7 +106,7 @@
 				const dz = target_position.z - z;
 
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-				const move_step = (feed_rate * delta) / 60; // distance per frame
+				const move_step = (feed_rate * (Math.pow($speed[0], 2) / 1000) * delta) / 60;
 
 				const normalized_dx = (dx / distance) * move_step;
 				const normalized_dy = (dy / distance) * move_step;
@@ -142,7 +148,8 @@
 	);
 
 	function _reset() {
-		_pause();
+		_stop();
+		playing = false;
 
 		// go to origin
 		x = start_position.x;
@@ -152,6 +159,11 @@
 		// reset g_code line index and target position
 		current_line_index = 0;
 		target_position = { x: 0, y: 0, z: 0 };
+	}
+
+	function _pause() {
+		_stop();
+		playing = false;
 	}
 
 	function _step() {
@@ -164,6 +176,7 @@
 	export const start = _start;
 	export const pause = _pause;
 	export const step = _step;
+	export let playing: boolean = false;
 
 	// orbit controls
 	let autoRotate: boolean = false;
