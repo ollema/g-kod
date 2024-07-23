@@ -53,8 +53,10 @@
 
 	// scaled tool radius and tool heights
 	const scaled_tool_radius = tool_radius * scale_factor;
-	const tool_height = scaled_stock_depth * 3;
-	const tool_z_offset = tool_height / 2;
+	const cutter_length = scaled_stock_depth / 2 + 2 * scale_factor;
+	const holder_length = 15 * scale_factor;
+	const cutter_z_offset = cutter_length / 2;
+	const holder_z_offset = cutter_length + holder_length / 2;
 
 	let feed_rate = 2000; // use a sane default feed rate
 
@@ -68,6 +70,8 @@
 	$: scaled_y = y * scale_factor;
 	$: scaled_z = z * scale_factor;
 
+	let stepping: boolean = false;
+
 	const { start: _start, stop: _pause } = useTask(
 		(delta) => {
 			if (current_line_index >= g_code.length) {
@@ -77,6 +81,7 @@
 
 			const command = parse_g_code_line(g_code[current_line_index]);
 
+			// move tool if G00 or G01 command
 			if (command && (command.cmd === 'G00' || command.cmd === 'G01')) {
 				const { cmd, X, Y, Z, F } = command;
 				// rapid move
@@ -114,14 +119,21 @@
 					Math.abs(target_position.z - new_z) < Math.abs(normalized_dz) ? target_position.z : new_z;
 
 				if (
-					Math.abs(target_position.x - x) < 0.01 &&
-					Math.abs(target_position.y - y) < 0.01 &&
-					Math.abs(target_position.z - z) < 0.01
+					!(
+						Math.abs(target_position.x - x) < 0.01 &&
+						Math.abs(target_position.y - y) < 0.01 &&
+						Math.abs(target_position.z - z) < 0.01
+					)
 				) {
-					current_line_index++;
+					// target not reached, return without incrementing line index
+					return;
 				}
-			} else {
-				current_line_index++;
+			}
+
+			current_line_index++;
+			if (stepping) {
+				_pause();
+				stepping = false;
 			}
 		},
 		{
@@ -129,7 +141,7 @@
 		}
 	);
 
-	function _stop() {
+	function _reset() {
 		_pause();
 
 		// go to origin
@@ -142,10 +154,16 @@
 		target_position = { x: 0, y: 0, z: 0 };
 	}
 
+	function _step() {
+		stepping = true;
+		_start();
+	}
+
 	// export functions to control animation playback
+	export const reset = _reset;
 	export const start = _start;
 	export const pause = _pause;
-	export const stop = _stop;
+	export const step = _step;
 
 	// orbit controls
 	let autoRotate: boolean = false;
@@ -198,9 +216,14 @@
 
 <!-- tool -->
 <T.Group position.x={scaled_x} position.y={scaled_y} position.z={scaled_z}>
-	<T.Mesh rotation.x={Math.PI / 2} position.z={tool_z_offset}>
-		<T.CylinderGeometry
-			args={[scaled_tool_radius, scaled_tool_radius, scaled_stock_depth * 3, 32]}
-		/>
+	<!-- cutter -->
+	<T.Mesh rotation.x={Math.PI / 2} position.z={cutter_z_offset}>
+		<T.CylinderGeometry args={[scaled_tool_radius, scaled_tool_radius, cutter_length, 32]} />
+		<T.MeshStandardMaterial color={'#ffd633'} />
+	</T.Mesh>
+	<!-- holder -->
+	<T.Mesh rotation.x={Math.PI / 2} position.z={holder_z_offset}>
+		<T.CylinderGeometry args={[scaled_tool_radius, scaled_tool_radius, holder_length, 32]} />
+		<T.MeshStandardMaterial color={'#666666'} />
 	</T.Mesh>
 </T.Group>

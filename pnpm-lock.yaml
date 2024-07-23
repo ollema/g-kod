@@ -8,9 +8,9 @@ importers:
 
   .:
     devDependencies:
-      '@fontsource/iosevka-etoile':
-        specifier: ^5.0.11
-        version: 5.0.11
+      '@fontsource-variable/inconsolata':
+        specifier: ^5.0.18
+        version: 5.0.18
       '@melt-ui/pp':
         specifier: ^0.3.2
         version: 0.3.2(@melt-ui/svelte@0.83.0(svelte@4.2.18))(svelte@4.2.18)
@@ -420,8 +420,8 @@ packages:
   '@floating-ui/utils@0.2.4':
     resolution: {integrity: sha512-dWO2pw8hhi+WrXq1YJy2yCuWoL20PddgGaqTgVe4cOS9Q6qklXCiA1tJEqX6BEwRNSCP84/afac9hd4MS+zEUA==}
 
-  '@fontsource/iosevka-etoile@5.0.11':
-    resolution: {integrity: sha512-1KqbvGhVmDGNUgAjW48HI1MGooK6AgW39V/5bV6NS30M/IBabk+GBUxZP9fAXnxA3bMv89DPRwOE0YOJUVVheQ==}
+  '@fontsource-variable/inconsolata@5.0.18':
+    resolution: {integrity: sha512-tnpqD9NOKGJlYvf9/wjy6CNAZUpiNIf5OCdQnUEd5rHMepPx8Jkv4XzWgNuU88npVoDGn7qHnv05lAcyZ7Qpqw==}
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -2444,7 +2444,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.4': {}
 
-  '@fontsource/iosevka-etoile@5.0.11': {}
+  '@fontsource-variable/inconsolata@5.0.18': {}
 
   '@humanwhocodes/module-importer@1.0.1': {}
 

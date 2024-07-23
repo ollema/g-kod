@@ -1,7 +1,6 @@
 <script>
 	import '../app.css';
-	import '@fontsource/iosevka-etoile';
-
+	import '@fontsource-variable/inconsolata';
 	import Logo from '$lib/components/logo';
 </script>
 
