@@ -6,7 +6,6 @@
 	import Stock from './Stock.svelte';
 	import Tool from './Tool.svelte';
 
-	import type { Position } from '$lib/g_code/types';
 	import {
 		find_initial_feed_rate,
 		find_max_dimensions,
@@ -31,8 +30,8 @@
 	export let speed: Writable<number[]>;
 
 	let start_position = find_start_position(g_code);
-	let current_position = { ...start_position };
-	let target_position: Position | undefined;
+	let current_position = start_position.clone();
+	let target_position: Vector3 | undefined;
 
 	let { x_max, y_max, z_max } = find_max_dimensions(g_code);
 	const scale_factor = (1 / Math.max(x_max, y_max, z_max)) * external_scale_factor;
@@ -117,7 +116,7 @@
 	function _reset() {
 		_stop();
 		playing = false;
-		current_position = { ...start_position };
+		current_position = start_position.clone();
 		current_line_index = 0;
 		target_position = undefined;
 	}

@@ -1,10 +1,13 @@
-import type { FeedRate, Position, GCodeLine } from './types';
+import {
+	DEFAULT_LINEAR_INTERPOLATION_FEED_RATE,
+	DEFAULT_RAPID_POSITIONING_FEED_RATE,
+	G_CODE_REGEX,
+	RAPID_POSITIONING
+} from './constants';
 
-const DEFAULT_G00_FEED_RATE = 5000;
-const DEFAULT_G01_FEED_RATE = 2000;
+import type { FeedRate, GCodeLine } from './types';
 
-const G_CODE_REGEX =
-	/^(G\d{2})?\s*(X-?\d*\.?\d*)?\s*(Y-?\d*\.?\d*)?\s*(Z-?\d*\.?\d*)?\s*(F\d*\.?\d*)?\s*(S\d*\.?\d*)?/;
+import { Vector3 } from 'three';
 
 function parse_g_code_line(line: string | undefined): GCodeLine {
 	const command: GCodeLine = {};
@@ -41,30 +44,31 @@ function parse_g_code_line(line: string | undefined): GCodeLine {
 
 export function interpret_g_code_line(
 	line: string,
-	current_position: Position,
+	current_position: Vector3,
 	current_feed_rate: FeedRate
-): { new_position: Position; new_feed_rate: FeedRate } {
+): { new_position: Vector3; new_feed_rate: FeedRate } {
 	const { cmd, X, Y, Z, F } = parse_g_code_line(line);
 
 	return {
-		new_position: {
-			x: X ?? current_position.x,
-			y: Y ?? current_position.y,
-			z: Z ?? current_position.z
-		},
-		new_feed_rate: cmd === 'G00' ? DEFAULT_G00_FEED_RATE : F || current_feed_rate
+		new_position: new Vector3(
+			X ?? current_position.x,
+			Y ?? current_position.y,
+			Z ?? current_position.z
+		),
+		new_feed_rate:
+			cmd === RAPID_POSITIONING ? DEFAULT_RAPID_POSITIONING_FEED_RATE : F || current_feed_rate
 	};
 }
 
-export function find_start_position(g_code: string[]): { x: number; y: number; z: number } {
+export function find_start_position(g_code: string[]): Vector3 {
 	for (let i = 0; i < g_code.length; i++) {
 		const command = parse_g_code_line(g_code[i]);
-		if (command.cmd === 'G00') {
-			return { x: command.X ?? 0, y: command.Y ?? 0, z: command.Z ?? 0 };
+		if (command.cmd === RAPID_POSITIONING) {
+			return new Vector3(command.X ?? 0, command.Y ?? 0, command.Z ?? 0);
 		}
 	}
 
-	return { x: 0, y: 0, z: 0 };
+	throw new Error('no start position found!');
 }
 
 export function find_max_dimensions(g_code: string[]): {
@@ -96,7 +100,7 @@ export function find_tool_radius(g_code: string[]): number {
 		}
 	}
 
-	return 0;
+	throw new Error('no tool radius found!');
 }
 
 export function find_initial_feed_rate(g_code: string[]): number {
@@ -107,5 +111,5 @@ export function find_initial_feed_rate(g_code: string[]): number {
 		}
 	}
 
-	return DEFAULT_G01_FEED_RATE;
+	return DEFAULT_LINEAR_INTERPOLATION_FEED_RATE;
 }

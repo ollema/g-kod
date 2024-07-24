@@ -1,21 +1,18 @@
 import { Vector3 } from 'three';
-import type { FeedRate, Position } from './types';
+import type { FeedRate } from './types';
 
 export function interpolate(
-	current_position: Position,
-	target_position: Position,
+	current_position: Vector3,
+	target_position: Vector3,
 	feed_rate: FeedRate,
 	delta: number,
 	speed: number
-): Position {
-	const current_vec = new Vector3(current_position.x, current_position.y, current_position.z);
-	const target_vec = new Vector3(target_position.x, target_position.y, target_position.z);
-
-	// calculate the direction vector and total distance
-	const direction = new Vector3().subVectors(target_vec, current_vec);
+): Vector3 {
+	// calculate direction and total distance between current and target positions
+	const direction = new Vector3().subVectors(target_position, current_position);
 	const total_distance = direction.length();
 
-	// check if total distance is zero or close to zero to avoid division by zero
+	// if we are already at the target position, then exit early
 	if (total_distance < 0.01) {
 		return target_position;
 	}
@@ -23,25 +20,22 @@ export function interpolate(
 	// normalize the direction vector
 	direction.normalize();
 
-	// calculate the distance that would be covered in delta ms at the current feedrate
-	const distance_covered = (feed_rate / 60000) * delta;
+	// calculate the distance (mm)
+	// that would be covered in delta (ms)
+	// at the current feedrate (mm/min)
+	const distance_covered = (feed_rate / (60 * 1000)) * delta;
 
-	// scale the distance covered by speed
+	// scale the distance covered by the speed factor
 	const scaled_distance_covered = distance_covered * Math.pow(speed, 2.25);
 
-	// compare the travelable distance with the total distance
+	// compare the distance distance_covered with the total distance
 	if (scaled_distance_covered >= total_distance) {
 		return target_position;
 	}
 
-	// travel how far we can along the direction vector
+	// calculate the travel distance
 	const travel_distance = Math.min(scaled_distance_covered, total_distance);
-	const new_position_vec = new Vector3().addVectors(
-		current_vec,
-		direction.multiplyScalar(travel_distance)
-	);
 
-	const new_position = { x: new_position_vec.x, y: new_position_vec.y, z: new_position_vec.z };
-
-	return new_position;
+	// return the new position
+	return new Vector3().addVectors(current_position, direction.multiplyScalar(travel_distance));
 }
