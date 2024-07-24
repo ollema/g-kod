@@ -22,17 +22,22 @@
 
 	Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
+	// g_code and line index
 	export let g_code: string[];
-	export let current_line_index = 0;
+	export let line_index = 0;
 
+	// render settings
 	export let external_scale_factor: number = 5.0;
-
 	export let speed: Writable<number[]>;
+	let stepping: boolean = false;
 
+	// tool position
 	let start_position = find_start_position(g_code);
-	let current_position = start_position.clone();
+	export let position = start_position.clone();
+	$: scaled_position = position.clone().multiplyScalar(scale_factor);
 	let target_position: Vector3 | undefined;
 
+	// stock dimensions
 	let { x_max, y_max, z_max } = find_max_dimensions(g_code);
 	const scale_factor = (1 / Math.max(x_max, y_max, z_max)) * external_scale_factor;
 	const scaled_stock_width = x_max * scale_factor;
@@ -44,25 +49,10 @@
 		-scaled_stock_depth / 2
 	];
 
+	// tool parameters
 	let tool_radius = find_tool_radius(g_code);
 	const scaled_tool_radius = tool_radius * scale_factor;
-
 	let feed_rate = find_initial_feed_rate(g_code);
-
-	// actual x, y, z coordinates
-	export let x = start_position.x;
-	$: x = current_position.x;
-	export let y = start_position.y;
-	$: y = current_position.y;
-	export let z = start_position.z;
-	$: z = current_position.z;
-
-	// scaled x, y, z coordinates
-	$: scaled_x = x * scale_factor;
-	$: scaled_y = y * scale_factor;
-	$: scaled_z = z * scale_factor;
-
-	let stepping: boolean = false;
 
 	const { start: _start, stop: _stop } = useTask(
 		(delta) => {
@@ -71,8 +61,8 @@
 			// if there is no target position, then we need to interpret the next g_code line
 			if (target_position === undefined) {
 				const { new_position, new_feed_rate } = interpret_g_code_line(
-					g_code[current_line_index],
-					current_position,
+					g_code[line_index],
+					position,
 					feed_rate
 				);
 
@@ -82,21 +72,15 @@
 
 			// then interpolate between current and target position
 			if (target_position !== undefined) {
-				current_position = interpolate(
-					current_position,
-					target_position,
-					feed_rate,
-					delta,
-					$speed[0]
-				);
+				position = interpolate(position, target_position, feed_rate, delta, $speed[0]);
 
-				// if the new position is the same as the target position, then we have reached the target
-				// then we can set the target position to undefined and increase the current line index
-				if (x === target_position.x && y === target_position.y && z === target_position.z) {
+				// if the current position is the same as the target position, then we have reached the target
+				// if so, set the target position to undefined and increase the current line index
+				if (position === target_position) {
 					target_position = undefined;
-					current_line_index++;
+					line_index++;
 
-					if (current_line_index >= g_code.length) {
+					if (line_index >= g_code.length) {
 						_pause();
 						return;
 					}
@@ -116,8 +100,8 @@
 	function _reset() {
 		_stop();
 		playing = false;
-		current_position = start_position.clone();
-		current_line_index = 0;
+		position = start_position.clone();
+		line_index = 0;
 		target_position = undefined;
 	}
 
@@ -150,4 +134,4 @@
 
 <AxisArrows {scaled_tool_radius} />
 
-<Tool {scaled_x} {scaled_y} {scaled_z} {scaled_tool_radius} {scale_factor} {scaled_stock_depth} />
+<Tool {scaled_position} {scaled_tool_radius} {scale_factor} {scaled_stock_depth} />

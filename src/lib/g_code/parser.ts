@@ -44,19 +44,14 @@ function parse_g_code_line(line: string | undefined): GCodeLine {
 
 export function interpret_g_code_line(
 	line: string,
-	current_position: Vector3,
-	current_feed_rate: FeedRate
+	position: Vector3,
+	feed_rate: FeedRate
 ): { new_position: Vector3; new_feed_rate: FeedRate } {
 	const { cmd, X, Y, Z, F } = parse_g_code_line(line);
 
 	return {
-		new_position: new Vector3(
-			X ?? current_position.x,
-			Y ?? current_position.y,
-			Z ?? current_position.z
-		),
-		new_feed_rate:
-			cmd === RAPID_POSITIONING ? DEFAULT_RAPID_POSITIONING_FEED_RATE : F || current_feed_rate
+		new_position: new Vector3(X ?? position.x, Y ?? position.y, Z ?? position.z),
+		new_feed_rate: cmd === RAPID_POSITIONING ? DEFAULT_RAPID_POSITIONING_FEED_RATE : F || feed_rate
 	};
 }
 

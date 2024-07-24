@@ -5,25 +5,24 @@
 	import { fade } from 'svelte/transition';
 
 	import { Canvas } from '@threlte/core';
+	import type { Vector3 } from 'three';
 
 	import { createSlider, createTooltip, melt } from '@melt-ui/svelte';
 
 	export let g_code: string[];
 
 	// props to bind
-	let x: number;
-	let y: number;
-	let z: number;
-	let current_line_index: number;
+	let position: Vector3;
+	let line_index: number;
 	let reset: () => void;
 	let start: () => void;
 	let pause: () => void;
 	let step: () => void;
 	let playing = false;
 
-	$: previous_line = g_code[current_line_index - 1];
-	$: current_line = g_code[current_line_index];
-	$: next_line = g_code[current_line_index + 1];
+	$: previous_line = g_code[line_index - 1];
+	$: current_line = g_code[line_index];
+	$: next_line = g_code[line_index + 1];
 
 	const {
 		elements: { root, range, thumbs },
@@ -54,10 +53,8 @@
 		<Scene
 			{g_code}
 			{speed}
-			bind:x
-			bind:y
-			bind:z
-			bind:current_line_index
+			bind:position
+			bind:line_index
 			bind:reset
 			bind:start
 			bind:pause
@@ -67,7 +64,7 @@
 	</Canvas>
 
 	<!-- show current g-code line being executed -->
-	{#if current_line_index !== undefined}
+	{#if line_index !== undefined}
 		<div class="absolute left-0 top-0 select-none text-left text-xs">
 			{#if previous_line !== undefined}
 				<div class="text-neutral-500">
@@ -88,11 +85,11 @@
 	{/if}
 
 	<!-- show coordinates -->
-	{#if x !== undefined && y !== undefined && z !== undefined}
+	{#if position}
 		<div class="absolute right-0 top-0 select-none text-left text-xs">
-			<div class="whitespace-pre">X: {x.toFixed(1).padStart(6)}</div>
-			<div class="whitespace-pre">Y: {y.toFixed(1).padStart(6)}</div>
-			<div class="whitespace-pre">Z: {z.toFixed(1).padStart(6)}</div>
+			<div class="whitespace-pre">X: {position.x.toFixed(1).padStart(6)}</div>
+			<div class="whitespace-pre">Y: {position.y.toFixed(1).padStart(6)}</div>
+			<div class="whitespace-pre">Z: {position.z.toFixed(1).padStart(6)}</div>
 		</div>
 	{/if}
 

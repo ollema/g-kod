@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
+	import type { Vector3 } from 'three';
 
-	export let scaled_x: number;
-	export let scaled_y: number;
-	export let scaled_z: number;
+	export let scaled_position: Vector3;
 
 	export let scaled_tool_radius: number;
 	export let scale_factor: number;
@@ -15,7 +14,11 @@
 	const holder_z_offset = cutter_length + holder_length / 2;
 </script>
 
-<T.Group position.x={scaled_x} position.y={scaled_y} position.z={scaled_z}>
+<T.Group
+	position.x={scaled_position.x}
+	position.y={scaled_position.y}
+	position.z={scaled_position.z}
+>
 	<!-- cutter -->
 	<T.Mesh rotation.x={Math.PI / 2} position.z={cutter_z_offset}>
 		<T.CylinderGeometry args={[scaled_tool_radius, scaled_tool_radius, cutter_length, 32]} />

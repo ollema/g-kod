@@ -2,14 +2,14 @@ import { Vector3 } from 'three';
 import type { FeedRate } from './types';
 
 export function interpolate(
-	current_position: Vector3,
+	position: Vector3,
 	target_position: Vector3,
 	feed_rate: FeedRate,
 	delta: number,
 	speed: number
 ): Vector3 {
 	// calculate direction and total distance between current and target positions
-	const direction = new Vector3().subVectors(target_position, current_position);
+	const direction = new Vector3().subVectors(target_position, position);
 	const total_distance = direction.length();
 
 	// if we are already at the target position, then exit early
@@ -37,5 +37,5 @@ export function interpolate(
 	const travel_distance = Math.min(scaled_distance_covered, total_distance);
 
 	// return the new position
-	return new Vector3().addVectors(current_position, direction.multiplyScalar(travel_distance));
+	return new Vector3().addVectors(position, direction.multiplyScalar(travel_distance));
 }
