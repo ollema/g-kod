@@ -15,7 +15,7 @@
 	export let enableZoom: boolean = true;
 </script>
 
-<T.PerspectiveCamera makeDefault position={[4, -4, 4]}>
+<T.PerspectiveCamera makeDefault position={[6, -4, 4]}>
 	<OrbitControls
 		{enableDamping}
 		{autoRotate}

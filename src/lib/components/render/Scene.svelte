@@ -123,7 +123,6 @@
 	export let playing: boolean = false;
 </script>
 
-<!-- camera and controls -->
 <Camera {center_of_stock} />
 
 <Gizmo {center_of_stock} />

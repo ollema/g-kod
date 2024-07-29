@@ -10,8 +10,7 @@ export function generate_displacement_map(width: number, height: number): HTMLCa
 		context.fillStyle = 'white';
 		context.fillRect(0, 0, width, height);
 
-		// Here you can draw your displacement details
-		// For example, draw a gradient for testing:
+		// draw a gradient for testing:
 		const gradient = context.createLinearGradient(0, 0, width, height);
 		gradient.addColorStop(0, 'black');
 		gradient.addColorStop(1, 'white');
