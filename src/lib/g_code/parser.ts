@@ -79,7 +79,8 @@ export function find_max_dimensions(g_code: string[]): {
 		const command = parse_g_code_line(g_code[i]);
 		if (command.X && command.X > x_max) x_max = command.X;
 		if (command.Y && command.Y > y_max) y_max = command.Y;
-		if (command.Z && command.Z > z_max) z_max = command.Z;
+		// here we actually want the minimum Z value and then we take the absolute value
+		if (command.Z && Math.abs(command.Z) > z_max) z_max = Math.abs(command.Z);
 	}
 
 	return { x_max, y_max, z_max };

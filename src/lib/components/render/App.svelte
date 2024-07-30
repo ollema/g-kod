@@ -56,8 +56,8 @@
 		<Scene
 			{g_code}
 			{speed}
-			bind:canvasDraw
-			bind:canvasHeightMap
+			bind:toolpath_canvas={canvasDraw}
+			bind:height_map_canvas={canvasHeightMap}
 			bind:position
 			bind:line_index
 			bind:reset

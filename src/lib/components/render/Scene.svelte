@@ -81,10 +81,10 @@
 					delta,
 					$speed[0],
 					tool_radius,
-					drawCtx,
-					heightMapCtx,
-					heightMap,
-					z_max
+					z_max,
+					toolpath_canvas_ctx,
+					height_map_canvas_ctx,
+					height_map
 				);
 
 				// if the current position is the same as the target position, then we have reached the target
@@ -118,16 +118,36 @@
 		target_position = undefined;
 
 		// clear the draw context
-		drawCtx.clearRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
-		drawCtx.fillStyle = 'black';
-		drawCtx.fillRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
+		toolpath_canvas_ctx.clearRect(
+			0,
+			0,
+			toolpath_canvas_ctx.canvas.width,
+			toolpath_canvas_ctx.canvas.height
+		);
+		toolpath_canvas_ctx.fillStyle = 'black';
+		toolpath_canvas_ctx.fillRect(
+			0,
+			0,
+			toolpath_canvas_ctx.canvas.width,
+			toolpath_canvas_ctx.canvas.height
+		);
 
 		// clear the height map context
-		heightMapCtx.clearRect(0, 0, heightMapCtx.canvas.width, heightMapCtx.canvas.height);
-		heightMapCtx.fillStyle = 'black';
-		heightMapCtx.fillRect(0, 0, heightMapCtx.canvas.width, heightMapCtx.canvas.height);
+		height_map_canvas_ctx.clearRect(
+			0,
+			0,
+			height_map_canvas_ctx.canvas.width,
+			height_map_canvas_ctx.canvas.height
+		);
+		height_map_canvas_ctx.fillStyle = 'black';
+		height_map_canvas_ctx.fillRect(
+			0,
+			0,
+			height_map_canvas_ctx.canvas.width,
+			height_map_canvas_ctx.canvas.height
+		);
 
-		heightMap.needsUpdate = true;
+		height_map.needsUpdate = true;
 	}
 
 	function _pause() {
@@ -147,37 +167,42 @@
 	export const step = _step;
 	export let playing: boolean = false;
 
-	export let canvasDraw: HTMLCanvasElement;
-	export let canvasHeightMap: HTMLCanvasElement;
-	let drawCtx: CanvasRenderingContext2D;
-	let heightMapCtx: CanvasRenderingContext2D;
-	let heightMap: CanvasTexture;
+	export let toolpath_canvas: HTMLCanvasElement;
+	export let height_map_canvas: HTMLCanvasElement;
+	let toolpath_canvas_ctx: CanvasRenderingContext2D;
+	let height_map_canvas_ctx: CanvasRenderingContext2D;
+	let height_map: CanvasTexture;
 
 	onMount(() => {
-		heightMap = new CanvasTexture(canvasHeightMap);
-		drawCtx = canvasDraw.getContext('2d') as CanvasRenderingContext2D;
-		heightMapCtx = canvasHeightMap.getContext('2d') as CanvasRenderingContext2D;
+		height_map = new CanvasTexture(height_map_canvas);
+		toolpath_canvas_ctx = toolpath_canvas.getContext('2d', {
+			willReadFrequently: true
+		}) as CanvasRenderingContext2D;
+		height_map_canvas_ctx = height_map_canvas.getContext('2d') as CanvasRenderingContext2D;
 
-		canvasDraw.width = x_max;
-		canvasDraw.height = y_max;
-		canvasDraw.style.width = `${2 * x_max}px`;
-		canvasDraw.style.height = `${2 * y_max}px`;
+		toolpath_canvas_ctx.imageSmoothingEnabled = false;
+		height_map_canvas_ctx.imageSmoothingEnabled = false;
 
-		canvasHeightMap.width = x_max;
-		canvasHeightMap.height = y_max;
-		canvasHeightMap.style.width = `${2 * x_max}px`;
-		canvasHeightMap.style.height = `${2 * y_max}px`;
+		toolpath_canvas.width = x_max;
+		toolpath_canvas.height = y_max;
+		toolpath_canvas.style.width = `${2 * x_max}px`;
+		toolpath_canvas.style.height = `${2 * y_max}px`;
+
+		height_map_canvas.width = x_max;
+		height_map_canvas.height = y_max;
+		height_map_canvas.style.width = `${2 * x_max}px`;
+		height_map_canvas.style.height = `${2 * y_max}px`;
 
 		// fill the canvas with black
-		drawCtx.fillStyle = 'black';
-		drawCtx.fillRect(0, 0, x_max, y_max);
+		toolpath_canvas_ctx.fillStyle = 'black';
+		toolpath_canvas_ctx.fillRect(0, 0, x_max, y_max);
 
 		// fill the height map with black
-		heightMapCtx.fillStyle = 'black';
-		heightMapCtx.fillRect(0, 0, x_max, y_max);
+		height_map_canvas_ctx.fillStyle = 'black';
+		height_map_canvas_ctx.fillRect(0, 0, x_max, y_max);
 
 		// trigger a texture update
-		heightMap.needsUpdate = true;
+		height_map.needsUpdate = true;
 	});
 </script>
 
@@ -192,7 +217,7 @@
 	{scaled_stock_width}
 	{scaled_stock_height}
 	{scaled_stock_depth}
-	{heightMap}
+	{height_map}
 />
 
 <AxisArrows {scaled_tool_radius} />

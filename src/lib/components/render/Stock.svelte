@@ -8,7 +8,7 @@
 	export let scaled_stock_width: number;
 	export let scaled_stock_height: number;
 	export let scaled_stock_depth: number;
-	export let heightMap: CanvasTexture;
+	export let height_map: CanvasTexture;
 </script>
 
 <T
@@ -19,7 +19,7 @@
 		scaled_stock_height,
 		200,
 		200,
-		heightMap,
+		height_map,
 		-scaled_stock_depth
 	]}
 	position={center_of_stock}
