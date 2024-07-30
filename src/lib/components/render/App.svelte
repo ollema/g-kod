@@ -68,8 +68,8 @@
 		/>
 	</Canvas>
 
-	<canvas class="absolute left-0 top-0" bind:this={canvasDraw} />
-	<canvas class="absolute right-0 top-0" bind:this={canvasHeightMap} />
+	<canvas class="absolute left-0 top-0 hidden" bind:this={canvasDraw} />
+	<canvas class="absolute right-0 top-0 hidden" bind:this={canvasHeightMap} />
 
 	<!-- show current g-code line being executed -->
 	{#if line_index !== undefined}

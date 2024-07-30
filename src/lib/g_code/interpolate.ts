@@ -11,7 +11,6 @@ export function interpolate(
 	drawCtx: CanvasRenderingContext2D,
 	heightMapCtx: CanvasRenderingContext2D,
 	heightMap: CanvasTexture,
-	path: { x: number; y: number }[],
 	z_max: number
 ): Vector3 {
 	// calculate direction and total distance between current and target positions
@@ -48,32 +47,34 @@ export function interpolate(
 		new_position = new Vector3().addVectors(position, direction.multiplyScalar(travel_distance));
 	}
 
-	// add the new position to the path
-	path.push({ x: new_position.x, y: new_position.y });
+	// get image data from the canvas
+	const imageData = drawCtx.getImageData(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
+	const data = imageData.data;
 
-	// clear canvas
-	drawCtx.clearRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
-	drawCtx.fillStyle = 'black';
-	drawCtx.fillRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
+	// set z color based on tool height.
+	const z_color = Math.round(Math.abs(new_position.z / z_max) * 255);
 
-	// draw the entire path
-	drawCtx.beginPath();
-	drawCtx.moveTo(path[0].x, path[0].y);
-	for (let i = 1; i < path.length; i++) {
-		drawCtx.lineTo(path[i].x, path[i].y);
+	// modify image data directly
+	const radius = Math.round(tool_radius);
+	const x_center = Math.round(new_position.x);
+	const y_center = Math.round(drawCtx.canvas.height - new_position.y);
+	for (let y = y_center - radius; y <= y_center + radius; y++) {
+		for (let x = x_center - radius; x <= x_center + radius; x++) {
+			if (x >= 0 && x < drawCtx.canvas.width && y >= 0 && y < drawCtx.canvas.height) {
+				const dx = x - x_center;
+				const dy = y - y_center;
+				if (dx * dx + dy * dy <= radius * radius) {
+					const index = (y * drawCtx.canvas.width + x) * 4;
+					data[index + 0] = z_color; // red
+					data[index + 1] = z_color; // green
+					data[index + 2] = z_color; // blue
+					data[index + 3] = 255; // alpha
+				}
+			}
+		}
 	}
 
-	// set stroke color based on tool depth. white for max depth, black for min depth
-	// z is negative but z max is positive
-	const z = Math.abs(new_position.z);
-	const z_min = 0;
-	const z_range = z_max - z_min;
-	const z_normalized = (z - z_min) / z_range;
-	const z_color = 255 - Math.round(255 * z_normalized);
-	console.log(z_color);
-	drawCtx.strokeStyle = `rgb(${z_color}, ${z_color}, ${z_color})`;
-	drawCtx.lineWidth = tool_radius * 2;
-	drawCtx.stroke();
+	drawCtx.putImageData(imageData, 0, 0);
 
 	// copy and mirror drawCtx to heightMapCtx along both x and y axes
 	heightMapCtx.clearRect(0, 0, heightMapCtx.canvas.width, heightMapCtx.canvas.height);

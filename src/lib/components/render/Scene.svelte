@@ -56,8 +56,6 @@
 	const scaled_tool_radius = tool_radius * scale_factor;
 	let feed_rate = find_initial_feed_rate(g_code);
 
-	let path: { x: number; y: number }[] = [];
-
 	const { start: _start, stop: _stop } = useTask(
 		(delta) => {
 			playing = true;
@@ -86,7 +84,6 @@
 					drawCtx,
 					heightMapCtx,
 					heightMap,
-					path,
 					z_max
 				);
 
@@ -119,7 +116,6 @@
 		position = start_position.clone();
 		line_index = 0;
 		target_position = undefined;
-		path = []; // clear the path
 
 		// clear the draw context
 		drawCtx.clearRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
@@ -164,16 +160,13 @@
 
 		canvasDraw.width = x_max;
 		canvasDraw.height = y_max;
-		canvasDraw.style.width = `${x_max}px`;
-		canvasDraw.style.height = `${y_max}px`;
+		canvasDraw.style.width = `${2 * x_max}px`;
+		canvasDraw.style.height = `${2 * y_max}px`;
 
 		canvasHeightMap.width = x_max;
 		canvasHeightMap.height = y_max;
-		canvasHeightMap.style.width = `${x_max}px`;
-		canvasHeightMap.style.height = `${y_max}px`;
-
-		drawCtx.translate(0, y_max);
-		drawCtx.scale(1, -1);
+		canvasHeightMap.style.width = `${2 * x_max}px`;
+		canvasHeightMap.style.height = `${2 * y_max}px`;
 
 		// fill the canvas with black
 		drawCtx.fillStyle = 'black';

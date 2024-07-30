@@ -9,13 +9,19 @@
 	export let scaled_stock_height: number;
 	export let scaled_stock_depth: number;
 	export let heightMap: CanvasTexture;
-
-	$: console.log(scaled_stock_depth);
 </script>
 
 <T
 	is={StockGeometry}
-	args={[scaled_stock_width, scaled_stock_depth, scaled_stock_height, 200, 200, heightMap, -0.25]}
+	args={[
+		scaled_stock_width,
+		scaled_stock_depth,
+		scaled_stock_height,
+		200,
+		200,
+		heightMap,
+		-scaled_stock_depth
+	]}
 	position={center_of_stock}
 	rotation.x={-Math.PI / 2}
 />
