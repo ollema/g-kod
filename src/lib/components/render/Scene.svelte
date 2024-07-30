@@ -18,7 +18,9 @@
 	import type { Writable } from 'svelte/store';
 
 	import { useTask } from '@threlte/core';
-	import { Vector3, Object3D } from 'three';
+	import { Vector3, Object3D, CanvasTexture } from 'three';
+
+	import { onMount } from 'svelte';
 
 	Object3D.DEFAULT_UP = new Vector3(0, 0, 1);
 
@@ -54,6 +56,8 @@
 	const scaled_tool_radius = tool_radius * scale_factor;
 	let feed_rate = find_initial_feed_rate(g_code);
 
+	let path: { x: number; y: number }[] = [];
+
 	const { start: _start, stop: _stop } = useTask(
 		(delta) => {
 			playing = true;
@@ -72,7 +76,19 @@
 
 			// then interpolate between current and target position
 			if (target_position !== undefined) {
-				position = interpolate(position, target_position, feed_rate, delta, $speed[0]);
+				position = interpolate(
+					position,
+					target_position,
+					feed_rate,
+					delta,
+					$speed[0],
+					tool_radius,
+					drawCtx,
+					heightMapCtx,
+					heightMap,
+					path,
+					z_max
+				);
 
 				// if the current position is the same as the target position, then we have reached the target
 				// if so, set the target position to undefined and increase the current line index
@@ -103,6 +119,19 @@
 		position = start_position.clone();
 		line_index = 0;
 		target_position = undefined;
+		path = []; // clear the path
+
+		// clear the draw context
+		drawCtx.clearRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
+		drawCtx.fillStyle = 'black';
+		drawCtx.fillRect(0, 0, drawCtx.canvas.width, drawCtx.canvas.height);
+
+		// clear the height map context
+		heightMapCtx.clearRect(0, 0, heightMapCtx.canvas.width, heightMapCtx.canvas.height);
+		heightMapCtx.fillStyle = 'black';
+		heightMapCtx.fillRect(0, 0, heightMapCtx.canvas.width, heightMapCtx.canvas.height);
+
+		heightMap.needsUpdate = true;
 	}
 
 	function _pause() {
@@ -121,6 +150,42 @@
 	export const pause = _pause;
 	export const step = _step;
 	export let playing: boolean = false;
+
+	export let canvasDraw: HTMLCanvasElement;
+	export let canvasHeightMap: HTMLCanvasElement;
+	let drawCtx: CanvasRenderingContext2D;
+	let heightMapCtx: CanvasRenderingContext2D;
+	let heightMap: CanvasTexture;
+
+	onMount(() => {
+		heightMap = new CanvasTexture(canvasHeightMap);
+		drawCtx = canvasDraw.getContext('2d') as CanvasRenderingContext2D;
+		heightMapCtx = canvasHeightMap.getContext('2d') as CanvasRenderingContext2D;
+
+		canvasDraw.width = x_max;
+		canvasDraw.height = y_max;
+		canvasDraw.style.width = `${x_max}px`;
+		canvasDraw.style.height = `${y_max}px`;
+
+		canvasHeightMap.width = x_max;
+		canvasHeightMap.height = y_max;
+		canvasHeightMap.style.width = `${x_max}px`;
+		canvasHeightMap.style.height = `${y_max}px`;
+
+		drawCtx.translate(0, y_max);
+		drawCtx.scale(1, -1);
+
+		// fill the canvas with black
+		drawCtx.fillStyle = 'black';
+		drawCtx.fillRect(0, 0, x_max, y_max);
+
+		// fill the height map with black
+		heightMapCtx.fillStyle = 'black';
+		heightMapCtx.fillRect(0, 0, x_max, y_max);
+
+		// trigger a texture update
+		heightMap.needsUpdate = true;
+	});
 </script>
 
 <Camera {center_of_stock} />
@@ -129,7 +194,13 @@
 
 <Lighting />
 
-<Stock {center_of_stock} {scaled_stock_width} {scaled_stock_height} {scaled_stock_depth} />
+<Stock
+	{center_of_stock}
+	{scaled_stock_width}
+	{scaled_stock_height}
+	{scaled_stock_depth}
+	{heightMap}
+/>
 
 <AxisArrows {scaled_tool_radius} />
 

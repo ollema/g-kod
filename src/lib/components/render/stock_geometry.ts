@@ -13,7 +13,8 @@ class StockGeometry extends Mesh {
 		depth: number,
 		segW: number,
 		segD: number,
-		heightMap: CanvasTexture
+		heightMap: CanvasTexture,
+		displacementScale: number
 	) {
 		super();
 
@@ -35,8 +36,10 @@ class StockGeometry extends Mesh {
 		}
 		this.geometry.setAttribute('enableDisp', new Float32BufferAttribute(enableDisplacement, 2));
 		this.material = new MeshStandardMaterial({
+			// wireframe: true,
 			color: 'white',
 			displacementMap: heightMap,
+			displacementScale: displacementScale,
 			// @ts-expect-error - false positive, onBeforeCompile does exist
 			onBeforeCompile: (shader) => {
 				shader.vertexShader = `

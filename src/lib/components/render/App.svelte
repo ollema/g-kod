@@ -11,6 +11,9 @@
 
 	export let g_code: string[];
 
+	let canvasDraw: HTMLCanvasElement;
+	let canvasHeightMap: HTMLCanvasElement;
+
 	// props to bind
 	let position: Vector3;
 	let line_index: number;
@@ -53,6 +56,8 @@
 		<Scene
 			{g_code}
 			{speed}
+			bind:canvasDraw
+			bind:canvasHeightMap
 			bind:position
 			bind:line_index
 			bind:reset
@@ -62,6 +67,9 @@
 			bind:playing
 		/>
 	</Canvas>
+
+	<canvas class="absolute left-0 top-0" bind:this={canvasDraw} />
+	<canvas class="absolute right-0 top-0" bind:this={canvasHeightMap} />
 
 	<!-- show current g-code line being executed -->
 	{#if line_index !== undefined}
